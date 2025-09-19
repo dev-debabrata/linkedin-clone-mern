@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+
+@theme{
+    --color-primary: "#0A66C2", // LinkedIn Blue
+	--color-secondary: "#FFFFFF", // White
+	--color-accent: "#7FC15E", // LinkedIn Green (for accents)
+	--color-neutral: "#000000", // Black (for text)
+	--color-"base-100": "#F3F2EF", // Light Gray (background)
+	--color-info: "#5E5E5E", // Dark Gray (for secondary text)
+	--color-success: "#057642", // Dark Green (for success messages)
+	--color-warning: "#F5C75D", // Yellow (for warnings)
+	--color-error: "#CC1016", // Red (for errors)				
+				
+}

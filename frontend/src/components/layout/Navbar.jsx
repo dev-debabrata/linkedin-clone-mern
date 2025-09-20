@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
-import { Bell, Home, LogOut, User, Users } from "lucide-react";
+import { Bell, Home, LogOut, Search, User, Users } from "lucide-react";
 
 const Navbar = () => {
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -37,7 +37,16 @@ const Navbar = () => {
 						<Link to='/'>
 							<img className='h-8 rounded' src='/small-logo.png' alt='LinkedIn' />
 						</Link>
+						<div className=" flex justify-center items-center h-8 border py-1 px-4 rounded-full">
+							<Search size={16} />
+							<input
+								className="text-[16px] px-2 text-black border-0 outline-none"
+								type="text"
+								placeholder="Search"
+							/>
+						</div>
 					</div>
+
 					<div className='flex items-center gap-2 md:gap-6'>
 						{authUser ? (
 							<>
@@ -77,7 +86,7 @@ const Navbar = () => {
 									<span className='text-xs hidden md:block'>Me</span>
 								</Link>
 								<button
-									className='flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800'
+									className='flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 cursor-pointer'
 									onClick={() => logout()}
 								>
 									<LogOut size={20} />

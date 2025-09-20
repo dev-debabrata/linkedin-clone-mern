@@ -110,7 +110,9 @@ const Post = ({ post }) => {
 						</div>
 					</div>
 					{isOwner && (
-						<button onClick={handleDeletePost} className='text-red-500 hover:text-red-700'>
+						<button
+							onClick={handleDeletePost}
+							className='text-red-500 hover:text-red-700 cursor-pointer'>
 							{isDeletingPost ? <Loader size={18} className='animate-spin' /> : <Trash2 size={18} />}
 						</button>
 					)}
@@ -130,6 +132,7 @@ const Post = ({ post }) => {
 						text={`Comment (${comments.length})`}
 						onClick={() => setShowComments(!showComments)}
 					/>
+
 					<PostAction icon={<Share2 size={18} />} text='Share' />
 				</div>
 			</div>

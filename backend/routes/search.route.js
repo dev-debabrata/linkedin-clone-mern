@@ -3,7 +3,7 @@ import User from '../models/user.model.js';
 
 const router = express.Router();
 
-router.get('/search', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const { query } = req.query;
         if (!query) {

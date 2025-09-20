@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 	);
 }
 
-app.use(express.json({ limit: "5mb" })); // parse JSON request bodies
+app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);

@@ -31,7 +31,7 @@ const LoginForm = () => {
 				placeholder='Username'
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
 				required
 			/>
 			<input
@@ -39,11 +39,11 @@ const LoginForm = () => {
 				placeholder='Password'
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
 				required
 			/>
 
-			<button type='submit' className='btn btn-primary w-full'>
+			<button type='submit' className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-blue-500 font-semibold'>
 				{isLoading ? <Loader className='size-5 animate-spin' /> : "Login"}
 			</button>
 		</form>

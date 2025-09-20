@@ -4,9 +4,9 @@ import { getSuggestedConnections, getPublicProfile, updateProfile, searchUsers }
 
 const router = express.Router();
 
-router.get("/search", protectRoute, searchUsers); // Add the new search route
-router.get("/:username", protectRoute, getPublicProfile);
+router.get("/search", protectRoute, searchUsers);
 router.get("/suggestions", protectRoute, getSuggestedConnections);
+router.get("/:username", protectRoute, getPublicProfile);
 
 router.put("/profile", protectRoute, updateProfile);
 

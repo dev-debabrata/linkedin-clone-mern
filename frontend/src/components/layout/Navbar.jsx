@@ -31,7 +31,6 @@ const Navbar = () => {
 		},
 	});
 
-	// Use TanStack Query for the search results as well
 	const { data: searchData, isFetching } = useQuery({
 		queryKey: ["searchUsers", searchQuery],
 		queryFn: async () => {
@@ -54,8 +53,11 @@ const Navbar = () => {
 		}
 	}, [searchData]);
 
+
 	const unreadNotificationCount = notifications?.data.filter((notif) => !notif.read).length;
 	const unreadConnectionRequestsCount = connectionRequests?.data?.length;
+
+
 
 	return (
 		<nav className='bg-secondary shadow-md sticky top-0 z-10'>

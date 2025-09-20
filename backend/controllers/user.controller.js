@@ -84,7 +84,7 @@ export const updateProfile = async (req, res) => {
 
 export const searchUsers = async (req, res) => {
 	try {
-		const { query } = req.query; // Get the search query from the URL parameter
+		const { query } = req.query;
 
 		if (!query) {
 			return res.status(400).json({ message: "Search query is required." });
@@ -96,8 +96,8 @@ export const searchUsers = async (req, res) => {
 				{ username: { $regex: query, $options: 'i' } }
 			]
 		})
-			.select('name username profileImg') // Select only the necessary fields for the search results
-			.limit(10); // Limit the number of results for performance
+			.select('name username profileImg')
+			.limit(10);
 
 		res.status(200).json(users);
 	} catch (error) {

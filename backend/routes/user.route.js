@@ -10,7 +10,4 @@ router.get("/suggestions", protectRoute, getSuggestedConnections);
 
 router.put("/profile", protectRoute, updateProfile);
 
-
-
-
 export default router;

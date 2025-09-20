@@ -1,9 +1,14 @@
+import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
 import { Bell, Home, LogOut, Search, User, Users } from "lucide-react";
 
 const Navbar = () => {
+
+	const [searchQuery, setSearchQuery] = useState("");
+	const [searchResults, setSearchResults] = useState([]);
+
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 	const queryClient = useQueryClient();
 
@@ -26,6 +31,29 @@ const Navbar = () => {
 		},
 	});
 
+	// Use TanStack Query for the search results as well
+	const { data: searchData, isFetching } = useQuery({
+		queryKey: ["searchUsers", searchQuery],
+		queryFn: async () => {
+			if (!searchQuery.trim()) {
+				return [];
+			}
+			const res = await axiosInstance.get(`/search?query=${searchQuery}`);
+			return res.data;
+		},
+		enabled: !!searchQuery.trim(),
+		staleTime: 500,
+		cacheTime: 500
+	});
+
+	useEffect(() => {
+		if (searchData) {
+			setSearchResults(searchData);
+		} else {
+			setSearchResults([]);
+		}
+	}, [searchData]);
+
 	const unreadNotificationCount = notifications?.data.filter((notif) => !notif.read).length;
 	const unreadConnectionRequestsCount = connectionRequests?.data?.length;
 
@@ -37,14 +65,47 @@ const Navbar = () => {
 						<Link to='/'>
 							<img className='h-8 rounded' src='/small-logo.png' alt='LinkedIn' />
 						</Link>
-						<div className=" flex justify-center items-center h-8 border py-1 px-4 rounded-full">
+						{/* Search bar */}
+						<div className="relative flex items-center h-8 border py-1 px-4 rounded-full bg-white">
+							<Search size={16} />
+							<input
+								type="text"
+								placeholder="Search"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								className="ml-2 text-[16px] outline-none flex-1"
+							/>
+
+							{/* Search dropdown */}
+							{searchQuery.trim() && (
+								<div className="absolute top-full left-0 mt-1 w-full bg-white shadow-lg rounded-md max-h-60 overflow-y-auto z-20">
+									{isFetching && (
+										<div className="px-4 py-2 text-gray-500">Searching...</div>
+									)}
+									{!isFetching && searchResults.length === 0 && (
+										<div className="px-4 py-2 text-gray-500">No results found</div>
+									)}
+									{searchResults.map((user) => (
+										<Link
+											key={user._id}
+											to={`/profile/${user.username}`}
+											className="block px-4 py-2 hover:bg-gray-100"
+											onClick={() => setSearchQuery("")}
+										>
+											{user.name}
+										</Link>
+									))}
+								</div>
+							)}
+						</div>
+						{/* <div className="relative flex justify-center items-center h-8 border py-1 px-4 rounded-full">
 							<Search size={16} />
 							<input
 								className="text-[16px] px-2 text-black border-0 outline-none"
 								type="text"
 								placeholder="Search"
 							/>
-						</div>
+						</div> */}
 					</div>
 
 					<div className='flex items-center gap-2 md:gap-6'>

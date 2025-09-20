@@ -5,6 +5,7 @@ import cors from "cors";
 import path from "path";
 
 import authRoutes from "./routes/auth.route.js";
+import searchRoutes from "./routes/search.route.js";
 import userRoutes from "./routes/user.route.js";
 import postRoutes from "./routes/post.route.js";
 import notificationRoutes from "./routes/notification.route.js";
@@ -31,6 +32,7 @@ app.use(express.json({ limit: "5mb" })); // parse JSON request bodies
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/notifications", notificationRoutes);

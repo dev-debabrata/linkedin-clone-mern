@@ -80,3 +80,28 @@ export const updateProfile = async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+
+export const searchUsers = async (req, res) => {
+	try {
+		const { query } = req.query; // Get the search query from the URL parameter
+
+		if (!query) {
+			return res.status(400).json({ message: "Search query is required." });
+		}
+
+		const users = await User.find({
+			$or: [
+				{ name: { $regex: query, $options: 'i' } },
+				{ username: { $regex: query, $options: 'i' } }
+			]
+		})
+			.select('name username profileImg') // Select only the necessary fields for the search results
+			.limit(10); // Limit the number of results for performance
+
+		res.status(200).json(users);
+	} catch (error) {
+		console.error("Error searching for users:", error);
+		res.status(500).json({ message: "Internal server error." });
+	}
+};

@@ -7,7 +7,7 @@ const SignUpPage = () => {
 			<div className='sm:mx-auto sm:w-full sm:max-w-md'>
 				<img className='mx-auto w-[220px]' src='/linkedin-logo.png' alt='LinkedIn' />
 				<h2 className='text-center text-2xl font-extrabold text-gray-900'>
-					Join in our Linkedin
+					Sign up with LinkedIn
 				</h2>
 			</div>
 			<div className='mt-6 sm:mx-auto sm:w-full sm:max-w-md shadow-md'>

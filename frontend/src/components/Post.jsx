@@ -11,7 +11,16 @@ import PostAction from "./PostAction";
 const Post = ({ post }) => {
 	const { postId } = useParams();
 
-	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+	// const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+
+	const { data: authUser } = useQuery({
+		queryKey: ["authUser"],
+		queryFn: async () => {
+			const res = await axiosInstance.get("/auth/me");
+			return res.data;
+		},
+	});
+
 	const [showComments, setShowComments] = useState(false);
 	const [newComment, setNewComment] = useState("");
 	const [comments, setComments] = useState(post.comments || []);
@@ -86,6 +95,29 @@ const Post = ({ post }) => {
 		}
 	};
 
+	const handleSharePost = async () => {
+		const postUrl = `${window.location.origin}/posts/${post._id}`;
+
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: "Check out this post!",
+					url: postUrl,
+				});
+			} catch (err) {
+				console.error("Share cancelled or failed:", err);
+			}
+		} else {
+			try {
+				await navigator.clipboard.writeText(postUrl);
+				toast.success("Link copied to clipboard!");
+			} catch (err) {
+				toast.error("Share not supported in this browser");
+			}
+		}
+	};
+
+
 	return (
 		<div className='bg-secondary rounded-lg shadow mb-4'>
 			<div className='p-4'>
@@ -133,7 +165,11 @@ const Post = ({ post }) => {
 						onClick={() => setShowComments(!showComments)}
 					/>
 
-					<PostAction icon={<Share2 size={18} />} text='Share' />
+					<PostAction
+						icon={<Share2 size={18} />}
+						text='Share'
+						onClick={handleSharePost}
+					/>
 				</div>
 			</div>
 

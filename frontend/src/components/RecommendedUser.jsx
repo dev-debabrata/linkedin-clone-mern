@@ -70,13 +70,13 @@ const RecommendedUser = ({ user }) => {
 					<div className='flex gap-2 justify-center'>
 						<button
 							onClick={() => acceptRequest(connectionStatus.data.requestId)}
-							className={`rounded-full p-1 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white`}
+							className={`rounded-full p-1 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
 						>
 							<Check size={16} />
 						</button>
 						<button
 							onClick={() => rejectRequest(connectionStatus.data.requestId)}
-							className={`rounded-full p-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white`}
+							className={`rounded-full p-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white cursor-pointer`}
 						>
 							<X size={16} />
 						</button>

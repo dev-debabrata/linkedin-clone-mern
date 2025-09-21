@@ -33,7 +33,7 @@ const SkillsSection = ({ userData, isOwnProfile, onSave }) => {
 					>
 						{skill}
 						{isEditing && (
-							<button onClick={() => handleDeleteSkill(skill)} className='ml-2 text-red-500'>
+							<button onClick={() => handleDeleteSkill(skill)} className='ml-2 text-red-500 cursor-pointer'>
 								<X size={14} />
 							</button>
 						)}
@@ -52,7 +52,7 @@ const SkillsSection = ({ userData, isOwnProfile, onSave }) => {
 					/>
 					<button
 						onClick={handleAddSkill}
-						className='bg-primary text-white py-2 px-4 rounded-r hover:bg-primary-dark transition duration-300'
+						className='bg-primary text-white py-2 px-4 rounded-r hover:bg-primary-dark transition duration-300 cursor-pointer'
 					>
 						Add Skill
 					</button>
@@ -64,14 +64,14 @@ const SkillsSection = ({ userData, isOwnProfile, onSave }) => {
 					{isEditing ? (
 						<button
 							onClick={handleSave}
-							className='mt-4 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300'
+							className='mt-4 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300 cursor-pointer'
 						>
 							Save Changes
 						</button>
 					) : (
 						<button
 							onClick={() => setIsEditing(true)}
-							className='mt-4 text-primary hover:text-primary-dark transition duration-300'
+							className='mt-4 text-primary hover:text-primary-dark transition duration-300 cursor-pointer'
 						>
 							Edit Skills
 						</button>

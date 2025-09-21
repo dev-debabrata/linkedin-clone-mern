@@ -24,7 +24,7 @@ const AboutSection = ({ userData, isOwnProfile, onSave }) => {
 							<button
 								onClick={handleSave}
 								className='mt-2 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark 
-								transition duration-300'
+								transition duration-300 cursor-pointer'
 							>
 								Save
 							</button>
@@ -34,7 +34,7 @@ const AboutSection = ({ userData, isOwnProfile, onSave }) => {
 							<p>{userData.about}</p>
 							<button
 								onClick={() => setIsEditing(true)}
-								className='mt-2 text-primary hover:text-primary-dark transition duration-300'
+								className='mt-2 text-primary hover:text-primary-dark transition duration-300 cursor-pointer'
 							>
 								Edit
 							</button>

@@ -63,7 +63,7 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 						</div>
 					</div>
 					{isEditing && (
-						<button onClick={() => handleDeleteExperience(exp._id)} className='text-red-500'>
+						<button onClick={() => handleDeleteExperience(exp._id)} className='text-red-500 cursor-pointer'>
 							<X size={20} />
 						</button>
 					)}
@@ -120,7 +120,7 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 					/>
 					<button
 						onClick={handleAddExperience}
-						className='bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300'
+						className='bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300 cursor-pointer'
 					>
 						Add Experience
 					</button>
@@ -132,14 +132,14 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 					{isEditing ? (
 						<button
 							onClick={handleSave}
-							className='mt-4 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300'
+							className='mt-4 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300 cursor-pointer'
 						>
 							Save Changes
 						</button>
 					) : (
 						<button
 							onClick={() => setIsEditing(true)}
-							className='mt-4 text-primary hover:text-primary-dark transition duration-300'
+							className='mt-4 text-primary hover:text-primary-dark transition duration-300 cursor-pointer'
 						>
 							Edit Experiences
 						</button>

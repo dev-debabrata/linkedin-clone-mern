@@ -48,7 +48,7 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 						</div>
 					</div>
 					{isEditing && (
-						<button onClick={() => handleDeleteEducation(edu._id)} className='text-red-500'>
+						<button onClick={() => handleDeleteEducation(edu._id)} className='text-red-500 cursor-pointer'>
 							<X size={20} />
 						</button>
 					)}
@@ -86,7 +86,7 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 					/>
 					<button
 						onClick={handleAddEducation}
-						className='bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300'
+						className='bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300 cursor-pointer'
 					>
 						Add Education
 					</button>
@@ -99,14 +99,14 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 						<button
 							onClick={handleSave}
 							className='mt-4 bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark
-							 transition duration-300'
+							 transition duration-300 cursor-pointer'
 						>
 							Save Changes
 						</button>
 					) : (
 						<button
 							onClick={() => setIsEditing(true)}
-							className='mt-4 text-primary hover:text-primary-dark transition duration-300'
+							className='mt-4 text-primary hover:text-primary-dark transition duration-300 cursor-pointer'
 						>
 							Edit Education
 						</button>

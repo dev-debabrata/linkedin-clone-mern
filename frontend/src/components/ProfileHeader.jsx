@@ -85,7 +85,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 							Connected
 						</div>
 						<button
-							className={`${baseClass} bg-red-500 hover:bg-red-600 text-sm`}
+							className={`${baseClass} bg-red-500 hover:bg-red-600 text-sm cursor-pointer`}
 							onClick={() => removeConnection(userData._id)}
 						>
 							<X size={20} className='mr-2' />
@@ -123,7 +123,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 				return (
 					<button
 						onClick={() => sendConnectionRequest(userData._id)}
-						className='bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-full transition duration-300 flex items-center justify-center'
+						className='bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-full transition duration-300 flex items-center justify-center cursor-pointer'
 					>
 						<UserPlus size={20} className='mr-2' />
 						Connect
@@ -234,7 +234,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 					isEditing ? (
 						<button
 							className='w-full bg-primary text-white py-2 px-4 rounded-full hover:bg-primary-dark
-							 transition duration-300'
+							 transition duration-300 cursor-pointer'
 							onClick={handleSave}
 						>
 							Save Profile
@@ -243,7 +243,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 						<button
 							onClick={() => setIsEditing(true)}
 							className='w-full bg-primary text-white py-2 px-4 rounded-full hover:bg-primary-dark
-							 transition duration-300'
+							 transition duration-300 cursor-pointer'
 						>
 							Edit Profile
 						</button>

@@ -81,16 +81,6 @@ _None provided by default._ If you deploy this project to a service (e.g., Rende
 
 ---
 
-<!-- ## Requirements
-
-- Node.js >= 18
-- npm >= 8 or yarn
-- MongoDB instance (Atlas or local)
-
---- -->
-
----
-
 ## API endpoints (overview)
 
 This section lists the most important endpoints. Adjust according to actual implementation.

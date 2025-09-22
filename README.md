@@ -60,7 +60,6 @@ _None provided by default._ If you deploy this project to a service (e.g., Rende
 
 ```
 / (root)
-
 ├─ backend/
 │  ├─ controllers/
 │  ├─ models/
@@ -89,46 +88,6 @@ _None provided by default._ If you deploy this project to a service (e.g., Rende
 - MongoDB instance (Atlas or local)
 
 --- -->
-
-## Installation
-
-1. Clone the repository:
-
-````bash
-
-2. Install server dependencies:
-
-```bash
-cd backend
-npm install
-````
-
-3. Install client dependencies in a new terminal:
-
-```bash
-cd frontend
-npm install
-```
-
----
-
-## Run (development)
-
-From the project root you can either run both apps separately or use a root `concurrently` script (if provided).
-
-**Run backend only**
-
-```bash
-cd backend
-npm start            # nodemon or similar
-```
-
-**Run frontend only**
-
-```bash
-cd frontend
-npm run dev
-```
 
 ---
 
@@ -198,5 +157,3 @@ npm test
 ## Contributing
 
 Contributions are welcome! Please open issues for bugs or feature requests and submit PRs with clear descriptions. Follow the repository's code style and add tests for new features.
-
----

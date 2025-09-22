@@ -11,11 +11,20 @@ import toast from "react-hot-toast";
 
 const ProfilePage = () => {
 	const { username } = useParams();
+
 	const queryClient = useQueryClient();
 
-	const { data: authUser, isLoading } = useQuery({
-		queryKey: ["authUser"],
-	});
+	const authUser = queryClient.getQueryData(["authUser"]);
+
+	// const { data: authUser, isLoading } = useQuery({
+	// 	queryKey: ["authUser"],
+	// });
+
+	// const { data: userProfile, isLoading: isUserProfileLoading } = useQuery({
+	// 	queryKey: ["userProfile", username],
+	// 	queryFn: () => axiosInstance.get(`/users/${username}`),
+	// 	enabled: !!username,
+	// });
 
 	const { data: userProfile, isLoading: isUserProfileLoading } = useQuery({
 		queryKey: ["userProfile", username],
@@ -32,7 +41,10 @@ const ProfilePage = () => {
 		},
 	});
 
-	if (isLoading || isUserProfileLoading) return null;
+	// if (isLoading || isUserProfileLoading) return null;
+	if (isUserProfileLoading || !userProfile || !authUser) {
+		return null;
+	}
 
 	const isOwnProfile = authUser.username === userProfile.data.username;
 	const userData = isOwnProfile ? authUser : userProfile.data;

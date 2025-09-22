@@ -6,18 +6,17 @@ import {
 } from "./emailTemplates.js";
 
 export const sendWelcomeEmail = async (email, name, profileUrl) => {
-	const recipient = [{ email }];
 
 	try {
-		const response = await transporter.send({
+		const response = await transporter.sendMail({
 			from: sender,
-			to: recipient,
-			subject: "Welcome to UnLinked",
+			to: email,
+			subject: "Welcome to LinkedIn",
 			html: createWelcomeEmailTemplate(name, profileUrl),
 			category: "welcome",
 		});
 
-		console.log("Welcome Email sent succesffully", response);
+		console.log("Welcome Email sent successfully", response);
 	} catch (error) {
 		throw error;
 	}
@@ -30,14 +29,18 @@ export const sendCommentNotificationEmail = async (
 	postUrl,
 	commentContent
 ) => {
-	const recipient = [{ email: recipientEmail }];
 
 	try {
-		const response = await transporter.send({
+		const response = await transporter.sendMail({
 			from: sender,
-			to: recipient,
+			to: recipientEmail,
 			subject: "New Comment on Your Post",
-			html: createCommentNotificationEmailTemplate(recipientName, commenterName, postUrl, commentContent),
+			html: createCommentNotificationEmailTemplate(
+				recipientName,
+				commenterName,
+				postUrl,
+				commentContent
+			),
 			category: "comment_notification",
 		});
 		console.log("Comment Notification Email sent successfully", response);
@@ -46,16 +49,27 @@ export const sendCommentNotificationEmail = async (
 	}
 };
 
-export const sendConnectionAcceptedEmail = async (senderEmail, senderName, recipientName, profileUrl) => {
-	const recipient = [{ email: senderEmail }];
+export const sendConnectionAcceptedEmail = async (
+	senderEmail,
+	senderName,
+	recipientName,
+	profileUrl
+) => {
 
 	try {
-		const response = await transporter.send({
+		const response = await transporter.sendMail({
 			from: sender,
-			to: recipient,
+			to: senderEmail,
 			subject: `${recipientName} accepted your connection request`,
-			html: createConnectionAcceptedEmailTemplate(senderName, recipientName, profileUrl),
+			html: createConnectionAcceptedEmailTemplate(
+				senderName,
+				recipientName,
+				profileUrl
+			),
 			category: "connection_accepted",
 		});
-	} catch (error) { }
+	} catch (error) {
+
+		console.error("Error sending connection accepted email:", error);
+	}
 };

@@ -10,7 +10,8 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 	const [editedData, setEditedData] = useState({});
 	const queryClient = useQueryClient();
 
-	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+	const authUser = queryClient.getQueryData(["authUser"]);
+	// const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
 	const { data: connectionStatus, refetch: refetchConnectionStatus } = useQuery({
 		queryKey: ["connectionStatus", userData._id],

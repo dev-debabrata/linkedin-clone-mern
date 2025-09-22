@@ -3,14 +3,14 @@ import SignUpForm from "../../components/auth/SignUpForm";
 
 const SignUpPage = () => {
 	return (
-		<div className='max-h-screen flex flex-col justify-center sm:px-6 lg:px-8'>
+		<div className='max-h-screen flex flex-col justify-center py-4 sm:px-6 lg:px-8'>
 			<div className='sm:mx-auto sm:w-full sm:max-w-md'>
 				<img className='mx-auto w-[220px]' src='/linkedin-logo.png' alt='LinkedIn' />
-				<h2 className='text-center text-2xl font-extrabold text-gray-900'>
-					Sign up with LinkedIn
+				<h2 className='mt-5 text-center text-4xl font-bold text-gray-900'>
+					Make the most of your professional life
 				</h2>
 			</div>
-			<div className='mt-6 sm:mx-auto sm:w-full sm:max-w-md shadow-md'>
+			<div className='mt-4 sm:mx-auto sm:w-full sm:max-w-md shadow-md'>
 				<div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
 					<SignUpForm />
 

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
@@ -13,21 +13,14 @@ const Post = ({ post }) => {
 
 	// const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
-	const { data: authUser } = useQuery({
-		queryKey: ["authUser"],
-		queryFn: async () => {
-			const res = await axiosInstance.get("/auth/me");
-			return res.data;
-		},
-	});
+	const queryClient = useQueryClient();
+	const authUser = queryClient.getQueryData(["authUser"]);
 
 	const [showComments, setShowComments] = useState(false);
 	const [newComment, setNewComment] = useState("");
 	const [comments, setComments] = useState(post.comments || []);
 	const isOwner = authUser._id === post.author._id;
 	const isLiked = post.likes.includes(authUser._id);
-
-	const queryClient = useQueryClient();
 
 	const { mutate: deletePost, isPending: isDeletingPost } = useMutation({
 		mutationFn: async () => {
@@ -176,8 +169,11 @@ const Post = ({ post }) => {
 			{showComments && (
 				<div className='px-4 pb-4'>
 					<div className='mb-4 max-h-60 overflow-y-auto'>
-						{comments.map((comment) => (
-							<div key={comment._id} className='mb-2 bg-base-100 p-2 rounded flex items-start'>
+						{comments.map((comment, index) => (
+							<div
+								key={comment._id || `${comment.user._id}-${comment.createdAt}-${index}`}
+								className='mb-2 bg-base-100 p-2 rounded flex items-start'
+							>
 								<img
 									src={comment.user.profilePicture || "/avatar.png"}
 									alt={comment.user.name}

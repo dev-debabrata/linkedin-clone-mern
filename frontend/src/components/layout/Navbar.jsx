@@ -139,7 +139,7 @@ const Navbar = () => {
 											<Link
 												key={user._id}
 												to={`/profile/${user.username}`}
-												className={`block px-4 py-2 hover:bg-gray-100 ${index === highlightedIndex ? "bg-gray-200" : ""
+												className={`block px-4 py-2 hover:bg-gray-100 ${index === highlightedIndex ? "bg-gray-300" : ""
 													}`}
 												onClick={() => setSearchQuery("")}
 											>

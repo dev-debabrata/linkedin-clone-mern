@@ -280,7 +280,7 @@ const NotificationsPage = () => {
 
 	return (
 		<div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
-			<div className='col-span-1 lg:col-span-1'>
+			<div className='col-span-1 lg:col-span-1 hidden lg:block sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
 				<Sidebar user={authUser} />
 			</div>
 			<div className='col-span-1 lg:col-span-3'>

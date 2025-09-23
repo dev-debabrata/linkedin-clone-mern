@@ -12,6 +12,7 @@ import NetworkPage from "./pages/NetworkPage";
 import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
 import PostDetails from "./components/PostDetails";
+import SuggestionsPage from "./pages/SuggestionsPage";
 
 
 
@@ -44,6 +45,7 @@ function App() {
         <Route path='/post/:postId' element={authUser ? <PostPage /> : <Navigate to={"/login"} />} />
         <Route path="/posts/:postId" element={authUser ? <PostDetails /> : <Navigate to={"/login"} />} />
         <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
+        <Route path="/suggestions" element={authUser ? <SuggestionsPage /> : <Navigate to={"/login"} />} />
       </Routes>
       <Toaster />
     </Layout>

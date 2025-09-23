@@ -1,26 +1,76 @@
 import User from "../models/user.model.js";
 import cloudinary from "../lib/cloudinary.js";
 
+
 export const getSuggestedConnections = async (req, res) => {
 	try {
 		const currentUser = await User.findById(req.user._id).select("connections");
 
-		// find users who are not already connected, and also do not recommend our own profile!! right?
-		const suggestedUser = await User.find({
+		const limit = parseInt(req.query.limit, 10) || 0;
+
+		const query = User.find({
 			_id: {
 				$ne: req.user._id,
 				$nin: currentUser.connections,
 			},
-		})
-			.select("name username profilePicture headline")
-			.limit(4);
+		}).select("name username profilePicture headline");
 
-		res.json(suggestedUser);
+		if (limit > 0) {
+			query.limit(limit);
+		}
+
+		const suggestedUsers = await query;
+
+		res.json(suggestedUsers);
 	} catch (error) {
 		console.error("Error in getSuggestedConnections controller:", error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+// export const getSuggestedConnections = async (req, res) => {
+// 	try {
+// 		const currentUser = await User.findById(req.user._id).select("connections");
+
+// 		const limit = parseInt(req.query.limit, 10) || 0;
+
+// 		const suggestedUsers = await User.find({
+// 			_id: {
+// 				$ne: req.user._id,
+// 				$nin: currentUser.connections,
+// 			},
+// 		})
+// 			.select("name username profilePicture headline")
+// 			.limit(limit);
+
+// 		res.json(suggestedUsers);
+// 	} catch (error) {
+// 		console.error("Error in getSuggestedConnections controller:", error);
+// 		res.status(500).json({ message: "Server error" });
+// 	}
+// };
+
+
+// export const getSuggestedConnections = async (req, res) => {
+// 	try {
+// 		const currentUser = await User.findById(req.user._id).select("connections");
+
+// 		// find users who are not already connected, and also do not recommend our own profile!! right?
+// 		const suggestedUser = await User.find({
+// 			_id: {
+// 				$ne: req.user._id,
+// 				$nin: currentUser.connections,
+// 			},
+// 		})
+// 			.select("name username profilePicture headline")
+// 			.limit(0);
+
+// 		res.json(suggestedUser);
+// 	} catch (error) {
+// 		console.error("Error in getSuggestedConnections controller:", error);
+// 		res.status(500).json({ message: "Server error" });
+// 	}
+// };
 
 export const getPublicProfile = async (req, res) => {
 	try {

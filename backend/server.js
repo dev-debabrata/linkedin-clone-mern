@@ -19,14 +19,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
-if (process.env.NODE_ENV !== "production") {
-	app.use(
-		cors({
-			origin: "https://linkedin-clone-k5wp.onrender.com",
-			credentials: true,
-		})
-	);
-}
+app.use(cors({
+  origin: "https://linkedin-clone-k5wp.onrender.com",
+  credentials: true, // allow cookies (important for JWT in cookies)
+}));
 
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());

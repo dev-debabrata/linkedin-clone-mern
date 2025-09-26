@@ -45,6 +45,8 @@ export const signup = async (req, res) => {
 
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
 
+		// Set cookie
+		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
 
 		res.status(201).json({ message: "User registered successfully" });
 
@@ -76,6 +78,9 @@ export const login = async (req, res) => {
 		}
 
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+
+		// Set cookie
+		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
 
 		res.json({ message: "Logged in successfully" });
 	} catch (error) {

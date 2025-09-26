@@ -38,20 +38,10 @@ app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/connections", connectionRoutes);
 
+
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "frontend/dist")));
 
-	// SPA catch-all route
-	app.get('/:path(.*)', (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-	});
-}
-
-// Serve frontend in production
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "frontend/dist")));
-
-	// Catch-all route for SPA
 	app.use((req, res) => {
 		res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
 	});

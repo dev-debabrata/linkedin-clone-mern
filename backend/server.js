@@ -22,7 +22,7 @@ const __dirname = path.resolve();
 if (process.env.NODE_ENV !== "production") {
 	app.use(
 		cors({
-			origin: process.env.CLIENT_URL,
+			origin: "https://linkedin-clone-k5wp.onrender.com",
 			credentials: true,
 		})
 	);

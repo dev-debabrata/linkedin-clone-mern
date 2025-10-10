@@ -54,12 +54,12 @@ const HomePage = () => {
 	// console.log("posts", posts);
 
 	return (
-		<div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
-			<div className='hidden lg:block lg:col-span-1 sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
+		<div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 gap-6 md:gap-2'>
+			<div className='hidden lg:block lg:col-span-1 md:block md:col-span-1 sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
 				<Sidebar user={authUser} />
 			</div>
 
-			<div className='col-span-1 lg:col-span-2 order-first lg:order-none'>
+			<div className='md:col-span-2 lg:col-span-2 order-first lg:order-none md:order-none'>
 				<PostCreation user={authUser} />
 
 				{posts?.map((post) => (
@@ -78,7 +78,7 @@ const HomePage = () => {
 			</div>
 
 			{recommendedUsers?.length > 0 && (
-				<div className='col-span-1 lg:col-span-1 hidden lg:block sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
+				<div className='col-span lg:col-span-1 md:block md:col-span-1 hidden lg:block sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
 					<div className='bg-secondary rounded-lg shadow p-4'>
 						<div className='flex items-center justify-between mb-4'>
 							<h2 className='font-semibold'>People you may know</h2>

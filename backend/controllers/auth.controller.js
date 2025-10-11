@@ -79,7 +79,6 @@ export const login = async (req, res) => {
 
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
 
-		// Set cookie
 		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
 
 		res.json({ message: "Logged in successfully" });
@@ -90,8 +89,11 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-	// Clear cookie with same options
-	res.clearCookie("jwt-linkedin", COOKIE_OPTIONS);
+	res.clearCookie("jwt-linkedin", {
+		httpOnly: true,
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+		secure: process.env.NODE_ENV === "production",
+	});
 	res.json({ message: "Logged out successfully" });
 };
 

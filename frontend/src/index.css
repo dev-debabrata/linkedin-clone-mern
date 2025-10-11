@@ -12,6 +12,10 @@
   --color-error: #cc1016;
 }
 
+body {
+  overflow-y: scroll;
+}
+
 /* --color-primary: #0A66C2, // LinkedIn Blue
 	--color-secondary: #FFFFFF, // White
 	--color-accent: #7FC15E, // LinkedIn Green (for accents)

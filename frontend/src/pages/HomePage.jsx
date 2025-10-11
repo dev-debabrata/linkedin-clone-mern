@@ -54,7 +54,7 @@ const HomePage = () => {
 	// console.log("posts", posts);
 
 	return (
-		<div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 gap-6 md:gap-2'>
+		<div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 lg:gap-6 md:gap-2'>
 			<div className='hidden lg:block lg:col-span-1 md:block md:col-span-1 sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
 				<Sidebar user={authUser} />
 			</div>

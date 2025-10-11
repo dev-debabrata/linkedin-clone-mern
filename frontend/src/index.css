@@ -12,8 +12,16 @@
   --color-error: #cc1016;
 }
 
-body {
-  overflow-y: scroll;
+/* @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+} */
+
+@layer base {
+  body {
+    @apply overflow-y-scroll;
+  }
 }
 
 /* --color-primary: #0A66C2, // LinkedIn Blue

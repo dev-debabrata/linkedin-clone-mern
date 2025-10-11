@@ -102,7 +102,7 @@ export const searchUsers = async (req, res) => {
 				{ username: { $regex: query, $options: 'i' } }
 			]
 		})
-			.select('name username profileImg')
+			.select('name username profilePicture')
 			.limit(10);
 
 		res.status(200).json(users);

@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
                 { name: { $regex: query, $options: 'i' } },
                 { username: { $regex: query, $options: 'i' } }
             ]
-        }).select('name username profileImg');
+        }).select('name username profilePicture');
 
         res.status(200).json(users);
     } catch (error) {

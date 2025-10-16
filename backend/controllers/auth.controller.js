@@ -6,7 +6,7 @@ import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 const COOKIE_OPTIONS = {
 	httpOnly: true,
 	maxAge: 3 * 24 * 60 * 60 * 1000,
-	sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+	sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
 	secure: process.env.NODE_ENV === "production",
 };
 

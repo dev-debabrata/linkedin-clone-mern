@@ -270,7 +270,7 @@ const Post = ({ post }) => {
 						{isLongContent && !expandedContent && (
 							<span
 								onClick={() => setExpandedContent(true)}
-								className='text-gray-500 text-sm hover:text-blue-800 cursor-pointer ml-1 hover:underline'
+								className='text-gray-500 text-sm hover:text-blue-800 cursor-pointer hover:underline'
 							>
 								.... more
 							</span>
@@ -278,7 +278,7 @@ const Post = ({ post }) => {
 						{expandedContent && (
 							<span
 								onClick={() => setExpandedContent(false)}
-								className='text-gray-500 text-sm hover:text-blue-800 cursor-pointer ml-1 hover:underline'
+								className='text-gray-500 text-sm hover:text-blue-800 cursor-pointer hover:underline'
 							>
 								.... less
 							</span>

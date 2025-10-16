@@ -91,7 +91,7 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
 	res.clearCookie("jwt-linkedin", {
 		httpOnly: true,
-		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+		sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
 		secure: process.env.NODE_ENV === "production",
 	});
 	res.json({ message: "Logged out successfully" });

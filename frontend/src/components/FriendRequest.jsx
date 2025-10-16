@@ -49,13 +49,13 @@ const FriendRequest = ({ request }) => {
 
 			<div className='space-x-2'>
 				<button
-					className='bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors'
+					className='bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors cursor-pointer'
 					onClick={() => acceptConnectionRequest(request._id)}
 				>
 					Accept
 				</button>
 				<button
-					className='bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors'
+					className='bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors cursor-pointer'
 					onClick={() => rejectConnectionRequest(request._id)}
 				>
 					Reject

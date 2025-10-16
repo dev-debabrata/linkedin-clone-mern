@@ -3,6 +3,7 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 import {
 	createPost,
 	getFeedPosts,
+	updatePost,
 	deletePost,
 	getPostById,
 	createComment,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.get("/", protectRoute, getFeedPosts);
 router.post("/create", protectRoute, createPost);
+router.put("/update/:id", protectRoute, updatePost);
 router.delete("/delete/:id", protectRoute, deletePost);
 router.get("/:id", protectRoute, getPostById);
 router.post("/:id/comment", protectRoute, createComment);

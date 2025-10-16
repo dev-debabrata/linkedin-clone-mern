@@ -45,6 +45,32 @@ export const createPost = async (req, res) => {
 	}
 };
 
+
+export const updatePost = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { content, image } = req.body;
+		const userId = req.user._id;
+
+		const post = await Post.findById(id);
+		if (!post) return res.status(404).json({ message: "Post not found" });
+
+		if (post.author.toString() !== userId.toString()) {
+			return res.status(403).json({ message: "You can't edit this post" });
+		}
+
+		if (content !== undefined) post.content = content;
+		if (image !== undefined) post.image = image;
+
+		const updatedPost = await post.save();
+		res.status(200).json(updatedPost);
+	} catch (err) {
+		console.error("Error updating post:", err);
+		res.status(500).json({ message: "Failed to update post" });
+	}
+};
+
+
 export const deletePost = async (req, res) => {
 	try {
 		const postId = req.params.id;

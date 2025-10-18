@@ -67,7 +67,7 @@ const RecommendedUser = ({ user }) => {
 				);
 			case "received":
 				return (
-					<div className='flex gap-4 justify-center'>
+					<div className='flex gap-2 justify-center'>
 						<button
 							onClick={() => acceptRequest(connectionStatus.data.requestId)}
 							className={`rounded-full p-1 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white cursor-pointer`}
@@ -123,7 +123,7 @@ const RecommendedUser = ({ user }) => {
 				/>
 				<div>
 					<h3 className='font-semibold text-base md:text-xs lg:text-sm'>{user.name}</h3>
-					<p className=' text-sm md:text-[10px] lg:text-xs text-info truncate max-w-[140px]'>{user.headline}</p>
+					<p className=' text-sm md:text-[10px] lg:text-xs text-info truncate max-w-[120px]'>{user.headline}</p>
 				</div>
 			</Link>
 			{renderButton()}

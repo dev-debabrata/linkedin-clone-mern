@@ -157,7 +157,7 @@ const Navbar = () => {
 										searchInputRef.current?.focus();
 										setIsSearchActive(true);
 									}}
-									className="relative flex items-center h-8 w-[285px] md:w-[245px] lg:w-[245px]  border border-gray-400 py-1 px-4 rounded-full bg-white focus-within:bg-gray-200 focus-within:border-black focus-within:border-2 md:focus-within:w-[400px] lg:focus-within:w-[400px] cursor-text z-40"
+									className="relative flex items-center h-8 w-[310px] md:w-[245px] lg:w-[245px]  border border-gray-400 py-1 px-4 rounded-full bg-white focus-within:bg-gray-200 focus-within:border-black focus-within:border-2 md:focus-within:w-[400px] lg:focus-within:w-[400px] cursor-text z-40"
 								>
 									<Search size={16} />
 									<input

@@ -66,7 +66,7 @@ const SignUpForm = () => {
 				required
 			/>
 
-			<button type='submit' disabled={isLoading} className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-blue-500 font-semibold'>
+			<button type='submit' disabled={isLoading} className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold'>
 				{isLoading ? <Loader className='size-5 animate-spin' /> : "Agree & Join"}
 			</button>
 		</form>

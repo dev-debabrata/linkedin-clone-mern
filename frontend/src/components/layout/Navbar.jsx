@@ -283,7 +283,7 @@ const Navbar = () => {
 						{/* Home */}
 						<Link
 							to="/"
-							className={`flex flex-col items-center border-none px-8 py-2 ${location.pathname === "/"
+							className={`flex flex-col items-center border-none px-7 py-2 ${location.pathname === "/"
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -295,7 +295,7 @@ const Navbar = () => {
 						{/* Network */}
 						<Link
 							to="/network"
-							className={`flex flex-col items-center relative border-none px-8 py-2 ${location.pathname.startsWith("/network")
+							className={`flex flex-col items-center relative border-none px-7 py-2 ${location.pathname.startsWith("/network")
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -312,7 +312,7 @@ const Navbar = () => {
 						{/* Notifications */}
 						<Link
 							to="/notifications"
-							className={`flex flex-col items-center relative border-none px-8 py-2 ${location.pathname.startsWith("/notifications")
+							className={`flex flex-col items-center relative border-none px-7 py-2 ${location.pathname.startsWith("/notifications")
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -329,7 +329,7 @@ const Navbar = () => {
 						{/* Profile */}
 						<Link
 							to={`/profile/${authUser.username}`}
-							className={`flex flex-col items-center border-none px-8 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
+							className={`flex flex-col items-center border-none px-7 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -339,7 +339,7 @@ const Navbar = () => {
 						</Link>
 
 						{/* Logout (no highlight) */}
-						<button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-8 py-2">
+						<button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-7 py-2">
 							<LogOut size={22} />
 							<span className="text-[10px] mt-1">Sign out</span>
 						</button>

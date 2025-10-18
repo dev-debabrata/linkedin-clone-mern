@@ -54,7 +54,7 @@ const ProfilePage = () => {
 	};
 
 	return (
-		<div className='max-w-4xl mx-auto'>
+		<div className='max-w-4xl mx-auto pb-4'>
 			<ProfileHeader userData={userData} isOwnProfile={isOwnProfile} onSave={handleSave} />
 			<AboutSection userData={userData} isOwnProfile={isOwnProfile} onSave={handleSave} />
 			<ExperienceSection userData={userData} isOwnProfile={isOwnProfile} onSave={handleSave} />

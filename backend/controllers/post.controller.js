@@ -82,12 +82,10 @@ export const deletePost = async (req, res) => {
 			return res.status(404).json({ message: "Post not found" });
 		}
 
-		// check if the current user is the author of the post
 		if (post.author.toString() !== userId.toString()) {
 			return res.status(403).json({ message: "You are not authorized to delete this post" });
 		}
 
-		// delete the image from cloudinary as well!
 		if (post.image) {
 			await cloudinary.uploader.destroy(post.image.split("/").pop().split(".")[0]);
 		}
@@ -115,25 +113,39 @@ export const getPostById = async (req, res) => {
 	}
 };
 
+// Create Comment 
 export const createComment = async (req, res) => {
 	try {
 		const postId = req.params.id;
 		const { content } = req.body;
+		const userId = req.user._id;
 
-		const post = await Post.findByIdAndUpdate(
+		const updatedPost = await Post.findByIdAndUpdate(
 			postId,
 			{
-				$push: { comments: { user: req.user._id, content } },
+				$push: { comments: { user: userId, content } },
 			},
 			{ new: true }
-		).populate("author", "name email username headline profilePicture");
+		);
 
-		// create a notification if the comment owner is not the post owner
-		if (post.author._id.toString() !== req.user._id.toString()) {
+		if (!updatedPost) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		const newCommentSubdocument = updatedPost.comments[updatedPost.comments.length - 1];
+
+		const postWithPopulatedComments = await Post.findById(postId)
+			.populate("comments.user", "name profilePicture username headline");
+
+		const fullyPopulatedNewComment = postWithPopulatedComments.comments.find(
+			c => c._id.equals(newCommentSubdocument._id)
+		);
+
+		if (updatedPost.author._id.toString() !== userId.toString()) {
 			const newNotification = new Notification({
-				recipient: post.author,
+				recipient: updatedPost.author,
 				type: "comment",
-				relatedUser: req.user._id,
+				relatedUser: userId,
 				relatedPost: postId,
 			});
 
@@ -142,8 +154,8 @@ export const createComment = async (req, res) => {
 			try {
 				const postUrl = process.env.CLIENT_URL + "/post/" + postId;
 				await sendCommentNotificationEmail(
-					post.author.email,
-					post.author.name,
+					updatedPost.author.email,
+					updatedPost.author.name,
 					req.user.name,
 					postUrl,
 					content
@@ -152,13 +164,41 @@ export const createComment = async (req, res) => {
 				console.log("Error in sending comment notification email:", error);
 			}
 		}
+		res.status(201).json({
+			message: "Comment created successfully",
+			comment: fullyPopulatedNewComment
+		});
 
-		res.status(200).json(post);
 	} catch (error) {
 		console.error("Error in createComment controller:", error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+// Delete a comment
+export const deleteComment = async (req, res) => {
+	const { postId, commentId } = req.params;
+
+	try {
+		const post = await Post.findById(postId);
+		if (!post) return res.status(404).json({ message: "Post not found" });
+
+		const comment = post.comments.id(commentId);
+		if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+		if (comment.user.toString() !== req.user._id.toString()) {
+			return res.status(403).json({ message: "Not authorized" });
+		}
+
+		comment.deleteOne();
+		await post.save();
+
+		res.json({ message: "Comment deleted" });
+	} catch (err) {
+		res.status(500).json({ message: "Server error", error: err.message });
+	}
+};
+
 
 export const likePost = async (req, res) => {
 	try {
@@ -167,12 +207,9 @@ export const likePost = async (req, res) => {
 		const userId = req.user._id;
 
 		if (post.likes.includes(userId)) {
-			// unlike the post
 			post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
 		} else {
-			// like the post
 			post.likes.push(userId);
-			// create a notification if the post owner is not the user who liked
 			if (post.author.toString() !== userId.toString()) {
 				const newNotification = new Notification({
 					recipient: post.author,
@@ -193,3 +230,50 @@ export const likePost = async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+
+
+// export const createComment = async (req, res) => {
+// 	try {
+// 		const postId = req.params.id;
+// 		const { content } = req.body;
+
+// 		const post = await Post.findByIdAndUpdate(
+// 			postId,
+// 			{
+// 				$push: { comments: { user: req.user._id, content } },
+// 			},
+// 			{ new: true }
+// 		).populate("author", "name email username headline profilePicture");
+
+// 		// create a notification if the comment owner is not the post owner
+// 		if (post.author._id.toString() !== req.user._id.toString()) {
+// 			const newNotification = new Notification({
+// 				recipient: post.author,
+// 				type: "comment",
+// 				relatedUser: req.user._id,
+// 				relatedPost: postId,
+// 			});
+
+// 			await newNotification.save();
+
+// 			try {
+// 				const postUrl = process.env.CLIENT_URL + "/post/" + postId;
+// 				await sendCommentNotificationEmail(
+// 					post.author.email,
+// 					post.author.name,
+// 					req.user.name,
+// 					postUrl,
+// 					content
+// 				);
+// 			} catch (error) {
+// 				console.log("Error in sending comment notification email:", error);
+// 			}
+// 		}
+
+// 		res.status(200).json(post);
+// 	} catch (error) {
+// 		console.error("Error in createComment controller:", error);
+// 		res.status(500).json({ message: "Server error" });
+// 	}
+// };

@@ -4,6 +4,8 @@ import Sidebar from "../components/Sidebar";
 import { UserPlus } from "lucide-react";
 import FriendRequest from "../components/FriendRequest";
 import UserCard from "../components/UserCard";
+import RecommendedUser from "../components/RecommendedUser";
+import { Link } from "react-router-dom";
 
 const NetworkPage = () => {
 	const queryClient = useQueryClient();
@@ -19,9 +21,15 @@ const NetworkPage = () => {
 		queryFn: () => axiosInstance.get("/connections"),
 	});
 
+	const { data: recommendedUsers } = useQuery({
+		queryKey: ["recommendedUsers"],
+		queryFn: () =>
+			axiosInstance.get("/users/suggestions?limit=3").then(res => res.data),
+	});
+
 	return (
 		<div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
-			<div className='col-span-1 lg:col-span-1'>
+			<div className='hidden md:block lg:block col-span-1 lg:col-span-1 '>
 				<Sidebar user={user} />
 			</div>
 			<div className='col-span-1 lg:col-span-3'>
@@ -51,10 +59,33 @@ const NetworkPage = () => {
 							</p>
 						</div>
 					)}
+
+					{recommendedUsers?.length > 0 && (
+						<div className=" mb-8 lg:hidden">
+							<h2><h2 className='text-xl font-semibold mb-2'>Suggestions</h2></h2>
+							<div className="bg-secondary rounded-lg shadow p-4">
+								<div className=" flex justify-between items-center mb-4">
+									<h2 className='font-semibold text-[18px]'>People you may know</h2>
+									<Link
+										to='/suggestions'
+										className=' text-base text-primary hover:underline'
+									>
+										See All
+									</Link>
+								</div>
+								<div className="space-y-3">
+									{recommendedUsers.map((user) => (
+										<RecommendedUser key={user._id} user={user} />
+									))}
+								</div>
+							</div>
+						</div>
+					)}
+
 					{connections?.data?.length > 0 && (
-						<div className='mb-8'>
+						<div className='mb-6'>
 							<h2 className='text-xl font-semibold mb-4'>My Connections</h2>
-							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+							<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
 								{connections.data
 									.filter(connection => connection)
 									.map((connection) => (
@@ -64,8 +95,8 @@ const NetworkPage = () => {
 						</div>
 					)}
 				</div>
-			</div>
-		</div>
+			</div >
+		</div >
 	);
 };
 export default NetworkPage;

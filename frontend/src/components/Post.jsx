@@ -43,6 +43,7 @@ const Post = ({ post }) => {
 
 	const isOwner = authUser._id === post.author._id;
 	const isLiked = post.likes.includes(authUser._id);
+	const commentSectionRef = useRef(null);
 
 	const menuRef = useRef(null);
 	const modalRef = useRef(null);
@@ -57,6 +58,30 @@ const Post = ({ post }) => {
 		document.addEventListener("mousedown", handleClickOutsideMenu);
 		return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
 	}, []);
+
+
+	// Close comment outside click
+	useEffect(() => {
+		const handleClickOutsideComments = (e) => {
+			if (
+				commentSectionRef.current &&
+				!commentSectionRef.current.contains(e.target)
+			) {
+				setShowComments(false);
+			}
+		};
+
+		if (showComments) {
+			document.addEventListener("mousedown", handleClickOutsideComments);
+		} else {
+			document.removeEventListener("mousedown", handleClickOutsideComments);
+		}
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutsideComments);
+		};
+	}, [showComments]);
+
 
 	// Close modal when click outside
 	useEffect(() => {
@@ -119,16 +144,72 @@ const Post = ({ post }) => {
 	// Create Comment
 	const { mutate: createComment, isPending: isAddingComment } = useMutation({
 		mutationFn: async (comment) => {
-			await axiosInstance.post(`/posts/${post._id}/comment`, { content: comment });
+
+			const response = await axiosInstance.post(`/posts/${post._id}/comment`, { content: comment });
+			return response.data.comment;
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		onMutate: async (newCommentContent) => {
+			await queryClient.cancelQueries({ queryKey: ["posts"] });
+
+			const tempComment = {
+				_id: Date.now() * -1,
+				content: newCommentContent,
+				user: {
+					_id: authUser._id,
+					name: authUser.name,
+					profilePicture: authUser.profilePicture,
+				},
+				createdAt: new Date().toISOString(),
+			};
+
+			setComments((prev) => [...prev, tempComment]);
+			setNewComment("");
+			return { tempCommentId: tempComment._id };
+		},
+		onSuccess: (newCommentFromServer, _, context) => {
+			setComments((prev) =>
+				prev.map((c) => (c._id === context.tempCommentId ? newCommentFromServer : c))
+			);
 			toast.success("Comment added successfully");
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
 		},
-		onError: (err) => {
+		onError: (err, _, context) => {
+			setComments((prev) => prev.filter((c) => c._id !== context.tempCommentId));
 			toast.error(err.response?.data?.message || "Failed to add comment");
 		},
 	});
+
+	// const { mutate: createComment, isPending: isAddingComment } = useMutation({
+	// 	mutationFn: async (comment) => {
+	// 		await axiosInstance.post(`/posts/${post._id}/comment`, { content: comment });
+	// 	},
+	// 	onSuccess: () => {
+	// 		queryClient.invalidateQueries({ queryKey: ["posts"] });
+	// 		toast.success("Comment added successfully");
+	// 	},
+	// 	onError: (err) => {
+	// 		toast.error(err.response?.data?.message || "Failed to add comment");
+	// 	},
+	// });
+
+	// 🗑 Delete Comment
+
+
+	const { mutate: deleteComment, isPending: isDeletingComment } = useMutation({
+		mutationFn: async (commentId) => {
+			await axiosInstance.delete(`/posts/${post._id}/comments/${commentId}`);
+		},
+		onSuccess: (_, commentId) => {
+			setComments((prev) => prev.filter((c) => c._id !== commentId));
+			toast.success("Comment deleted");
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		},
+		onError: (err) => {
+			toast.error(err.response?.data?.message || "Failed to delete comment");
+		},
+	});
+
+
 
 	// Handlers
 	const handleDeletePost = () => {
@@ -143,22 +224,10 @@ const Post = ({ post }) => {
 
 	const handleAddComment = (e) => {
 		e.preventDefault();
-		if (!newComment.trim()) return;
+		const content = newComment.trim();
+		if (!content) return;
 
-		createComment(newComment);
-		setComments([
-			...comments,
-			{
-				content: newComment,
-				user: {
-					_id: authUser._id,
-					name: authUser.name,
-					profilePicture: authUser.profilePicture,
-				},
-				createdAt: new Date(),
-			},
-		]);
-		setNewComment("");
+		createComment(content);
 	};
 
 	const handleSharePost = async () => {
@@ -201,7 +270,7 @@ const Post = ({ post }) => {
 		});
 
 	return (
-		<div className='bg-secondary rounded-lg shadow mb-4'>
+		<div className='bg-secondary rounded-lg shadow mb-2 md:mb-4 lg:mb-4'>
 			<div className='p-4'>
 				{/* Header */}
 				<div className='flex items-center justify-between mb-4'>
@@ -210,14 +279,14 @@ const Post = ({ post }) => {
 							<img
 								src={post.author.profilePicture || "/avatar.png"}
 								alt={post.author.name}
-								className='size-10 rounded-full mr-3'
+								className='size-14 rounded-full mr-3'
 							/>
 						</Link>
 						<div>
 							<Link to={`/profile/${post?.author?.username}`}>
 								<h3 className='font-semibold'>{post.author.name}</h3>
 							</Link>
-							<p className='text-xs text-info'>{post.author.headline}</p>
+							<p className='text-xs text-info truncate max-w-[200px] md:max-w-[250px] lg:max-w-[350px]'>{post.author.headline}</p>
 							<p className='text-xs text-info'>
 								{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
 							</p>
@@ -320,7 +389,9 @@ const Post = ({ post }) => {
 
 			{/* Comments */}
 			{showComments && (
-				<div className='px-4 pb-4'>
+				<div
+					ref={commentSectionRef}
+					className='px-4 pb-4'>
 					<div className='mb-4 max-h-60 overflow-y-auto'>
 						{comments.map((comment, index) => (
 							<div
@@ -341,6 +412,21 @@ const Post = ({ post }) => {
 									</div>
 									<p>{comment.content}</p>
 								</div>
+
+								{/* Delete comment */}
+								{authUser._id === comment.user._id && (
+									<button
+										onClick={() => deleteComment(comment._id)}
+										className='text-red-500 hover:text-red-700 cursor-pointer pt-1 pr-1'
+										disabled={isDeletingComment}
+									>
+										{isDeletingComment ? (
+											<Loader size={18} className='animate-spin' />
+										) : (
+											<Trash2 size={18} />
+										)}
+									</button>
+								)}
 							</div>
 						))}
 					</div>
@@ -351,15 +437,15 @@ const Post = ({ post }) => {
 							value={newComment}
 							onChange={(e) => setNewComment(e.target.value)}
 							placeholder='Add a comment...'
-							className='flex-grow p-2 rounded-l-full bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary'
+							className='flex-grow p-2 pl-4 rounded-l-full bg-base-100 focus:outline-none focus:ring-1 focus:ring-primary'
 						/>
 
 						<button
 							type='submit'
-							className='bg-primary text-white p-2 rounded-r-full hover:bg-primary-dark transition duration-300'
+							className='bg-primary text-white p-2 rounded-r-full hover:bg-primary-dark transition duration-300 cursor-pointer'
 							disabled={isAddingComment}
 						>
-							{isAddingComment ? <Loader size={18} className='animate-spin' /> : <Send size={18} />}
+							{isAddingComment ? <Loader size={22} className='animate-spin' /> : <Send size={22} />}
 						</button>
 					</form>
 				</div>

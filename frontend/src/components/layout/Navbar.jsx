@@ -283,7 +283,7 @@ const Navbar = () => {
 						{/* Home */}
 						<Link
 							to="/"
-							className={`flex flex-col items-center border-none px-7 py-2 ${location.pathname === "/"
+							className={`flex flex-col items-center border-none px-5 py-2 ${location.pathname === "/"
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -292,18 +292,18 @@ const Navbar = () => {
 							<span className="text-[10px] mt-1">Home</span>
 						</Link>
 
-						{/* Network */}
+						{/* My Network */}
 						<Link
 							to="/network"
-							className={`flex flex-col items-center relative border-none px-7 py-2 ${location.pathname.startsWith("/network")
+							className={`flex flex-col items-center relative border-none px-5 py-2 ${location.pathname.startsWith("/network")
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
 						>
 							<Users size={22} />
-							<span className="text-[10px] mt-1">Network</span>
+							<span className="text-[10px] mt-1">My Network</span>
 							{unreadConnectionRequestsCount > 0 && (
-								<span className="absolute top-0 right-2 bg-blue-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+								<span className="absolute top-1 right-6 bg-blue-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
 									{unreadConnectionRequestsCount}
 								</span>
 							)}
@@ -312,13 +312,13 @@ const Navbar = () => {
 						{/* Notifications */}
 						<Link
 							to="/notifications"
-							className={`flex flex-col items-center relative border-none px-7 py-2 ${location.pathname.startsWith("/notifications")
+							className={`flex flex-col items-center relative border-none px-5 py-2 ${location.pathname.startsWith("/notifications")
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
 						>
 							<Bell size={22} />
-							<span className="text-[10px] mt-1">Alerts</span>
+							<span className="text-[10px] mt-1">Notifications</span>
 							{unreadNotificationCount > 0 && (
 								<span className="absolute top-1 right-6 bg-red-700 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
 									{unreadNotificationCount}
@@ -329,7 +329,7 @@ const Navbar = () => {
 						{/* Profile */}
 						<Link
 							to={`/profile/${authUser.username}`}
-							className={`flex flex-col items-center border-none px-7 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
+							className={`flex flex-col items-center border-none px-5 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}
@@ -339,7 +339,7 @@ const Navbar = () => {
 						</Link>
 
 						{/* Logout (no highlight) */}
-						<button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-7 py-2">
+						<button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-5 py-2">
 							<LogOut size={22} />
 							<span className="text-[10px] mt-1">Sign out</span>
 						</button>

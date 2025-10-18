@@ -45,9 +45,9 @@ const PostDetails = () => {
     }
 
     return (
-        <div className="container mx-auto mt-8 flex gap-8">
+        <div className="container mx-auto flex gap-6">
             {/* Sidebar */}
-            <div className="hidden lg:block w-72">
+            <div className="hidden lg:block w-74">
                 <Sidebar user={authUser} />
             </div>
 

@@ -65,12 +65,15 @@ const PostCreation = ({ user }) => {
 	};
 
 	return (
-		<div className='bg-secondary rounded-lg shadow mb-4 p-4'>
+		<div className='bg-secondary rounded-lg shadow mb-2 md:mb-4 lg:mb-4 p-4'>
 			<div className='flex space-x-3'>
-				<img src={user.profilePicture || "/avatar.png"} alt={user.name} className='size-12 rounded-full' />
+				<img
+					src={user.profilePicture || "/avatar.png"}
+					alt={user.name}
+					className='size-10 rounded-full' />
 				<textarea
 					placeholder="What's on your mind?"
-					className='w-full p-3 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 min-h-[100px]'
+					className='w-full p-2 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 h-[40px] md:min-h-[100px] lg:min-h-[100px]'
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 				/>
@@ -82,17 +85,21 @@ const PostCreation = ({ user }) => {
 				</div>
 			)}
 
-			<div className='flex justify-between items-center mt-4'>
+			<div className='flex justify-between items-center mt-2'>
 				<div className='flex space-x-4'>
 					<label className='flex items-center text-info hover:text-info-dark transition-colors duration-200 cursor-pointer'>
 						<Image size={20} className='mr-1' />
 						<span>Photo</span>
-						<input type='file' accept='image/*' className='hidden' onChange={handleImageChange} />
+						<input
+							type='file'
+							accept='image/*'
+							className='hidden'
+							onChange={handleImageChange} />
 					</label>
 				</div>
 
 				<button
-					className='bg-primary text-white rounded-lg px-4 py-2 hover:bg-primary-dark transition-colors duration-200 cursor-pointer'
+					className='bg-primary text-white rounded-lg px-3 py-[6px] md:px-4 md:py-2 lg:px-4 lg:py-2 hover:bg-primary-dark transition-colors duration-200 cursor-pointer'
 					onClick={handlePostCreation}
 					disabled={isPending}
 				>

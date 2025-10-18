@@ -63,8 +63,6 @@ export const acceptConnectionRequest = async (req, res) => {
 
 		request.status = "accepted";
 		await request.save();
-
-		// if im your friend then ur also my friend ;)
 		await User.findByIdAndUpdate(request.sender._id, { $addToSet: { connections: userId } });
 		await User.findByIdAndUpdate(userId, { $addToSet: { connections: request.sender._id } });
 
@@ -191,8 +189,6 @@ export const getConnectionStatus = async (req, res) => {
 				return res.json({ status: "received", requestId: pendingRequest._id });
 			}
 		}
-
-		// if no connection or pending req found
 		res.json({ status: "not_connected" });
 	} catch (error) {
 		console.error("Error in getConnectionStatus controller:", error);

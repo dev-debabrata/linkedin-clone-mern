@@ -157,7 +157,7 @@ const Navbar = () => {
 										searchInputRef.current?.focus();
 										setIsSearchActive(true);
 									}}
-									className="relative flex items-center h-8 border border-gray-400 py-1 px-4 rounded-full bg-white focus-within:bg-gray-200 focus-within:border-black focus-within:border-2 focus-within:w-[400px] cursor-text z-40"
+									className="relative flex items-center h-8 w-[360px] md:w-[245px] lg:w-[245px]  border border-gray-400 py-1 px-4 rounded-full bg-white focus-within:bg-gray-200 focus-within:border-black focus-within:border-2 md:focus-within:w-[400px] lg:focus-within:w-[400px] cursor-text z-40"
 								>
 									<Search size={16} />
 									<input
@@ -212,59 +212,61 @@ const Navbar = () => {
 						<div className="flex items-center gap-2 md:gap-6">
 							{authUser ? (
 								<>
-									<Link to="/" className="text-neutral flex flex-col items-center">
-										<Home size={20} />
-										<span className="text-xs hidden md:block">Home</span>
-									</Link>
+									<div className=" hidden md:flex lg:flex items-center gap-2 md:gap-6">
+										<Link to="/" className="text-neutral flex flex-col items-center">
+											<Home size={20} />
+											<span className="text-xs hidden md:block">Home</span>
+										</Link>
 
-									<Link
-										to="/network"
-										className="text-neutral flex flex-col items-center relative"
-									>
-										<Users size={20} />
-										<span className="text-xs hidden md:block">My Network</span>
-										{unreadConnectionRequestsCount > 0 && (
-											<span className="absolute -top-1 -right-1 md:right-4 bg-blue-500 text-white text-xs rounded-full size-3 md:size-4 flex items-center justify-center">
-												{unreadConnectionRequestsCount}
-											</span>
-										)}
-									</Link>
+										<Link
+											to="/network"
+											className="text-neutral flex flex-col items-center relative"
+										>
+											<Users size={20} />
+											<span className="text-xs hidden md:block">My Network</span>
+											{unreadConnectionRequestsCount > 0 && (
+												<span className="absolute -top-1 -right-1 md:right-4 bg-blue-500 text-white text-xs rounded-full size-3 md:size-4 flex items-center justify-center">
+													{unreadConnectionRequestsCount}
+												</span>
+											)}
+										</Link>
 
-									<Link
-										to="/notifications"
-										className="text-neutral flex flex-col items-center relative"
-									>
-										<Bell size={20} />
-										<span className="text-xs hidden md:block">Notifications</span>
-										{unreadNotificationCount > 0 && (
-											<span className="absolute -top-1 -right-1 md:right-4 bg-blue-500 text-white text-xs rounded-full size-3 md:size-4 flex items-center justify-center">
-												{unreadNotificationCount}
-											</span>
-										)}
-									</Link>
+										<Link
+											to="/notifications"
+											className="text-neutral flex flex-col items-center relative"
+										>
+											<Bell size={20} />
+											<span className="text-xs hidden md:block">Notifications</span>
+											{unreadNotificationCount > 0 && (
+												<span className="absolute -top-1 -right-1 md:right-4 bg-blue-500 text-white text-xs rounded-full size-3 md:size-4 flex items-center justify-center">
+													{unreadNotificationCount}
+												</span>
+											)}
+										</Link>
 
-									<Link
-										to={`/profile/${authUser.username}`}
-										className="text-neutral flex flex-col items-center"
-									>
-										<User size={20} />
-										<span className="text-xs hidden md:block">Me</span>
-									</Link>
+										<Link
+											to={`/profile/${authUser.username}`}
+											className="text-neutral flex flex-col items-center"
+										>
+											<User size={20} />
+											<span className="text-xs hidden md:block">Me</span>
+										</Link>
 
-									<button
-										className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
-										onClick={() => logout()}
-									>
-										<LogOut size={20} />
-										<span className="hidden md:inline">Logout</span>
-									</button>
+										<button
+											className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+											onClick={() => logout()}
+										>
+											<LogOut size={20} />
+											<span className="hidden md:inline">Sign out</span>
+										</button>
+									</div>
 								</>
 							) : (
 								<>
-									<Link to="/login" className="btn btn-ghost">
+									<Link to="/login" className="btn btn-ghost px-5 py-1 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-200 flex items-center">
 										Sign In
 									</Link>
-									<Link to="/signup" className="btn btn-primary">
+									<Link to="/signup" className="btn btn-primary px-5 py-1 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-200 flex items-center">
 										Join now
 									</Link>
 								</>
@@ -273,6 +275,78 @@ const Navbar = () => {
 					</div>
 				</div>
 			</nav>
+
+			{/* Mobile Bottom Menu */}
+			{authUser && (
+				<div className="fixed bottom-0 left-0 right-0 bg-white shadow-inner border-none md:hidden z-50">
+					<div className="flex justify-around">
+						{/* Home */}
+						<Link
+							to="/"
+							className={`flex flex-col items-center border-none px-8 py-2 ${location.pathname === "/"
+								? "text-blue-600 bg-gray-200"
+								: "text-gray-600"
+								}`}
+						>
+							<Home size={22} />
+							<span className="text-[10px] mt-1">Home</span>
+						</Link>
+
+						{/* Network */}
+						<Link
+							to="/network"
+							className={`flex flex-col items-center relative border-none px-8 py-2 ${location.pathname.startsWith("/network")
+								? "text-blue-600 bg-gray-200"
+								: "text-gray-600"
+								}`}
+						>
+							<Users size={22} />
+							<span className="text-[10px] mt-1">Network</span>
+							{unreadConnectionRequestsCount > 0 && (
+								<span className="absolute top-0 right-2 bg-blue-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+									{unreadConnectionRequestsCount}
+								</span>
+							)}
+						</Link>
+
+						{/* Notifications */}
+						<Link
+							to="/notifications"
+							className={`flex flex-col items-center relative border-none px-8 py-2 ${location.pathname.startsWith("/notifications")
+								? "text-blue-600 bg-gray-200"
+								: "text-gray-600"
+								}`}
+						>
+							<Bell size={22} />
+							<span className="text-[10px] mt-1">Alerts</span>
+							{unreadNotificationCount > 0 && (
+								<span className="absolute top-1 right-7 bg-red-700 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+									{unreadNotificationCount}
+								</span>
+							)}
+						</Link>
+
+						{/* Profile */}
+						<Link
+							to={`/profile/${authUser.username}`}
+							className={`flex flex-col items-center border-none px-8 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
+								? "text-blue-600 bg-gray-200"
+								: "text-gray-600"
+								}`}
+						>
+							<User size={22} />
+							<span className="text-[10px] mt-1">Me</span>
+						</Link>
+
+						{/* Logout (no highlight) */}
+						<button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-8 py-2">
+							<LogOut size={22} />
+							<span className="text-[10px] mt-1">Sign out</span>
+						</button>
+					</div>
+				</div>
+			)}
+
 		</>
 	);
 };

@@ -58,10 +58,10 @@ const RecommendedUser = ({ user }) => {
 			case "pending":
 				return (
 					<button
-						className='px-3 py-1 rounded-full text-sm bg-yellow-500 text-white flex items-center'
+						className='md:px-[10px] md:py-[5px] lg:px-3 lg:py-1 rounded-full md:text-xs lg:text-sm bg-yellow-500 text-white flex items-center'
 						disabled
 					>
-						<Clock size={16} className='mr-1' />
+						<Clock size={16} className='md:mr-[3px] lg:mr-1' />
 						Pending
 					</button>
 				);
@@ -95,10 +95,10 @@ const RecommendedUser = ({ user }) => {
 			default:
 				return (
 					<button
-						className='px-3 py-1 rounded-full text-sm border border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-200 flex items-center'
+						className='md:px-[10px] md:py-[5px] lg:px-3 lg:py-1 rounded-full md:text-xs lg:text-sm border border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-200 flex items-center cursor-pointer'
 						onClick={handleConnect}
 					>
-						<UserPlus size={16} className='mr-1' />
+						<UserPlus size={16} className='md:mr-[3px] lg:mr-1' />
 						Connect
 					</button>
 				);
@@ -119,11 +119,11 @@ const RecommendedUser = ({ user }) => {
 				<img
 					src={user.profilePicture || "/avatar.png"}
 					alt={user.name}
-					className='w-12 h-12 rounded-full mr-3'
+					className='w-8 h-8 lg:w-12 lg:h-12 rounded-full md:mr-[6px] lg:mr-3'
 				/>
 				<div>
-					<h3 className='font-semibold text-sm'>{user.name}</h3>
-					<p className='text-xs text-info'>{user.headline}</p>
+					<h3 className='font-semibold md:text-xs lg:text-sm'>{user.name}</h3>
+					<p className=' md:text-[10px] lg:text-xs text-info'>{user.headline}</p>
 				</div>
 			</Link>
 			{renderButton()}

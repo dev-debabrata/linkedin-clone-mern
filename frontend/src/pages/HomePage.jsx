@@ -81,10 +81,10 @@ const HomePage = () => {
 				<div className='col-span lg:col-span-1 md:block md:col-span-1 hidden lg:block sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
 					<div className='bg-secondary rounded-lg shadow p-4'>
 						<div className='flex items-center justify-between mb-4'>
-							<h2 className='font-semibold'>People you may know</h2>
+							<h2 className='font-semibold md:text-sm lg:text-base'>People you may know</h2>
 							<Link
 								to='/suggestions'
-								className='text-sm text-primary hover:underline'
+								className=' text-xs lg:text-sm text-primary hover:underline'
 							>
 								See All
 							</Link>

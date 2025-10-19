@@ -37,7 +37,7 @@ const LoginPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className=" mt-42 md:mt-10">
+			<div className=" mt-40 md:mt-10">
 				<Footer />
 			</div>
 		</>

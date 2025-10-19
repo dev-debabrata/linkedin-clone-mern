@@ -3,7 +3,7 @@ import Layout from "./components/layout/Layout";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
-import SignUpPage from "./pages/auth/SignUpPage";
+import SignUpPage from "./pages/auth/SignupPage";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "./lib/axios";
@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import PostDetails from "./components/PostDetails";
 import SuggestionsPage from "./pages/SuggestionsPage";
 import PostCreateMobile from "./pages/PostCreateMobile";
+
 
 
 

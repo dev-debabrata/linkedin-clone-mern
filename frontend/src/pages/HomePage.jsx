@@ -60,7 +60,9 @@ const HomePage = () => {
 			</div>
 
 			<div className='md:col-span-2 lg:col-span-2 order-first lg:order-none md:order-none'>
-				<PostCreation user={authUser} />
+				<div className=" hidden md:block lg:block">
+					<PostCreation user={authUser} />
+				</div>
 
 				{posts?.map((post) => (
 					<Post key={post._id} post={post} />

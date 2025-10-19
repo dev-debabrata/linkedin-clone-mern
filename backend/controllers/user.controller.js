@@ -88,6 +88,40 @@ export const updateProfile = async (req, res) => {
 };
 
 
+// Delete profile picture
+export const deleteProfilePicture = async (req, res) => {
+	try {
+		const user = await User.findById(req.user.id);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		user.profilePicture = null;
+		await user.save();
+
+		res.json({ message: "Profile picture deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
+
+// Delete banner image
+export const deleteBannerImage = async (req, res) => {
+	try {
+		const user = await User.findById(req.user.id);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		user.bannerImg = null;
+		await user.save();
+
+		res.json({ message: "Banner image deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
+
+
+
 export const searchUsers = async (req, res) => {
 	try {
 		const { query } = req.query;

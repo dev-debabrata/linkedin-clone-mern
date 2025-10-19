@@ -70,10 +70,10 @@ const PostCreation = ({ user }) => {
 				<img
 					src={user.profilePicture || "/avatar.png"}
 					alt={user.name}
-					className='size-10 rounded-full' />
+					className='size-10 rounded-full hidden md:block lg:block' />
 				<textarea
 					placeholder="What's on your mind?"
-					className='w-full p-2 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 h-[40px] md:min-h-[100px] lg:min-h-[100px]'
+					className='w-full p-2 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 h-[250px] md:h-[100px] lg:h-[100px]'
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 				/>

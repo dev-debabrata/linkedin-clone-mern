@@ -470,11 +470,11 @@ const Post = ({ post }) => {
 							className='w-full p-3 rounded-lg focus:outline-none resize-none mb-2'
 							value={editedContent}
 							onChange={(e) => setEditedContent(e.target.value)}
-							rows={10}
+							rows={8}
 						/>
 
 						{imagePreview && (
-							<div className='w-50 overflow-hidden rounded-lg mb-2'>
+							<div className='w-25 md:w-30 overflow-hidden rounded-lg mb-2'>
 								<img
 									src={imagePreview}
 									alt='Preview'
@@ -492,7 +492,7 @@ const Post = ({ post }) => {
 
 							<button
 								onClick={() => updatePost()}
-								className=' px-4 py-2 text-base rounded bg-primary text-white hover:bg-blue-700'
+								className=' px-4 py-2 text-base rounded bg-primary text-white hover:bg-primary-dark'
 								disabled={isUpdating}
 							>
 								{isUpdating ? <Loader size={18} className='animate-spin' /> : "Save"}

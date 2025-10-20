@@ -466,25 +466,23 @@ const Post = ({ post }) => {
 
 						<h2 className='text-lg font-semibold mb-4'>Edit Post</h2>
 
-						<div className="bg-white rounded-lg shadow p-4">
-							<textarea
-								className='w-full p-3 rounded-lg bg-base-100 hover:bg-base-200 focus:outline-none resize-none mb-2'
-								value={editedContent}
-								onChange={(e) => setEditedContent(e.target.value)}
-								rows={8}
-							/>
+						<textarea
+							className='w-full p-3 rounded-lg focus:outline-none resize-none mb-2'
+							value={editedContent}
+							onChange={(e) => setEditedContent(e.target.value)}
+							rows={10}
+						/>
 
-							{imagePreview && (
-								<div className=' w-25 md:w-30 overflow-hidden rounded-lg mb-2'>
-									<img
-										src={imagePreview}
-										alt='Preview'
-										className='w-full object-cover'
-									/>
-								</div>
-							)}
+						{imagePreview && (
+							<div className='w-50 overflow-hidden rounded-lg mb-2'>
+								<img
+									src={imagePreview}
+									alt='Preview'
+									className='w-full object-cover'
+								/>
+							</div>
+						)}
 
-						</div>
 						<div className='flex justify-end items-center space-x-3 my-4'>
 							<label className='flex items-center text-info hover:text-info-dark cursor-pointer p-2 bg-gray-200 hover:bg-gray-300 rounded'>
 								<Image size={20} className='mr-1' />
@@ -494,7 +492,7 @@ const Post = ({ post }) => {
 
 							<button
 								onClick={() => updatePost()}
-								className=' px-4 py-2 text-base rounded bg-primary text-white hover:bg-primary-dark'
+								className=' px-4 py-2 text-base rounded bg-primary text-white hover:bg-blue-700'
 								disabled={isUpdating}
 							>
 								{isUpdating ? <Loader size={18} className='animate-spin' /> : "Save"}

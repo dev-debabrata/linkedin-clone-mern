@@ -13,11 +13,6 @@ export const transporter = nodemailer.createTransport({
     },
 });
 
-// export const sender = {
-//     name: "Linkedin Clone",
-//     email: process.env.SENDER_EMAIL,
-
-// };
 export const sender = `${process.env.SENDER_NAME} <${process.env.SENDER_EMAIL}>`;
 
 transporter.verify((error, success) => {

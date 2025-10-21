@@ -9,9 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "./lib/axios";
 import NotificationsPage from "./pages/NotificationsPage";
 import NetworkPage from "./pages/NetworkPage";
-import PostPage from "./pages/PostPage";
+import PostSharePage from "./pages/PostSharePage";
 import ProfilePage from "./pages/ProfilePage";
-import PostDetails from "./components/PostDetails";
 import SuggestionsPage from "./pages/SuggestionsPage";
 import PostCreateMobile from "./pages/PostCreateMobile";
 
@@ -45,8 +44,8 @@ function App() {
         <Route path="/create-post" element={authUser ? <PostCreateMobile /> : <Navigate to={"/login"} />} />
         <Route path='/notifications' element={authUser ? <NotificationsPage /> : <Navigate to={"/login"} />} />
         <Route path='/network' element={authUser ? <NetworkPage /> : <Navigate to={"/login"} />} />
-        <Route path='/post/:postId' element={authUser ? <PostPage /> : <Navigate to={"/login"} />} />
-        <Route path="/posts/:postId" element={authUser ? <PostDetails /> : <Navigate to={"/login"} />} />
+        <Route path='/post/:postId' element={authUser ? <PostSharePage /> : <Navigate to={"/login"} />} />
+        <Route path="/posts/:postId" element={authUser ? <PostSharePage /> : <Navigate to={"/login"} />} />
         <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
         <Route path="/suggestions" element={authUser ? <SuggestionsPage /> : <Navigate to={"/login"} />} />
       </Routes>

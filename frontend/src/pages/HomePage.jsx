@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import Sidebar from "../components/Sidebar";
 import PostCreation from "../components/PostCreation";
 import Post from "../components/Post";
-import { Users } from "lucide-react";
+import { Users, Loader } from "lucide-react";
 import RecommendedUser from "../components/RecommendedUser";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,9 @@ const HomePage = () => {
 	// const queryClient = useQueryClient();
 	// const authUser = queryClient.getQueryData(["authUser"]);
 
-	const { data: authUser } = useQuery({
+	const { data: authUser,
+		isLoading: userLoading,
+	} = useQuery({
 		queryKey: ["authUser"],
 		queryFn: async () => {
 			try {
@@ -29,7 +31,9 @@ const HomePage = () => {
 		},
 	});
 
-	const { data: recommendedUsers } = useQuery({
+	const { data: recommendedUsers,
+		isLoading: recommendedLoading,
+	} = useQuery({
 		queryKey: ["recommendedUsers"],
 		queryFn: () =>
 			axiosInstance.get("/users/suggestions?limit=4").then(res => res.data),
@@ -43,7 +47,9 @@ const HomePage = () => {
 	// 	},
 	// });
 
-	const { data: posts } = useQuery({
+	const { data: posts,
+		isLoading: postsLoading,
+	} = useQuery({
 		queryKey: ["posts"],
 		queryFn: async () => {
 			const res = await axiosInstance.get("/posts");
@@ -51,11 +57,18 @@ const HomePage = () => {
 		},
 	});
 
-	// console.log("posts", posts);
+
+	if (userLoading || postsLoading || recommendedLoading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader size={48} className="animate-spin text-primary" />
+			</div>
+		);
+	}
 
 	return (
 		<div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-4 lg:gap-6 md:gap-2'>
-			<div className='hidden lg:block lg:col-span-1 md:block md:col-span-1 sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
+			<div className='hidden lg:block lg:col-span-1 md:block md:col-span-1 sticky top-[78px] h-[calc(100vh-110px)] overflow-y-auto'>
 				<Sidebar user={authUser} />
 			</div>
 
@@ -80,7 +93,7 @@ const HomePage = () => {
 			</div>
 
 			{recommendedUsers?.length > 0 && (
-				<div className='col-span lg:col-span-1 md:block md:col-span-1 hidden lg:block sticky top-21 h-[calc(100vh-110px)] overflow-y-auto'>
+				<div className='col-span lg:col-span-1 md:block md:col-span-1 hidden lg:block sticky top-[78px] h-[calc(100vh-110px)] overflow-y-auto'>
 					<div className='bg-secondary rounded-lg shadow p-4'>
 						<div className='flex items-center justify-between mb-4'>
 							<h2 className='font-semibold md:text-sm lg:text-base'>People you may know</h2>

@@ -408,12 +408,6 @@ const Navbar = () => {
 							<User size={22} />
 							<span className="text-[10px] mt-1">Me</span>
 						</Link>
-
-						{/* Logout (no highlight) */}
-						{/* <button onClick={() => logout()} className="flex flex-col items-center text-gray-600 border-none px-5 py-2">
-							<LogOut size={22} />
-							<span className="text-[10px] mt-1">Sign out</span>
-						</button> */}
 					</div>
 				</div>
 			)}
@@ -422,66 +416,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-// {/* <div className="fixed bottom-0 left-0 right-0 bg-white shadow-inner border-none md:hidden z-50">
-// 	<div className="flex justify-around">
-// 		{/* Home */}
-// 		<Link
-// 			to="/"
-// 			className={`flex flex-col items-center border-none px-5 py-2 ${getLinkClass("/", true)}`}
-// 		>
-// 			<Home size={22} />
-// 			<span className="text-[10px] mt-1">Home</span>
-// 		</Link>
-
-// 		{/* My Network */}
-// 		<Link
-// 			to="/network"
-// 			className={`flex flex-col items-center relative border-none px-5 py-2 ${getLinkClass("/network")}`}
-// 		>
-// 			<Users size={22} />
-// 			<span className="text-[10px] mt-1">My Network</span>
-// 			{unreadConnectionRequestsCount > 0 && (
-// 				<span className="absolute top-1 right-8 bg-red-700 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
-// 					{unreadConnectionRequestsCount}
-// 				</span>
-// 			)}
-// 		</Link>
-
-// 		{/* Post Create Icon for Mobile */}
-// 		<button
-// 			onClick={() => setIsPostModalOpen(prev => !prev)}
-// 			className={`flex flex-col items-center border-none px-5 py-2 ${isPostModalOpen ? "text-blue-600 bg-gray-200" : "text-gray-600"
-// 				}`}
-// 		>
-// 			<SquarePlus size={22} />
-// 			<span className="text-[10px] mt-1">Post</span>
-// 		</button>
-
-
-// 		{/* Notifications */}
-// 		<Link
-// 			to="/notifications"
-// 			className={`flex flex-col items-center relative border-none px-5 py-2 ${getLinkClass("/notifications")}`}
-// 		>
-// 			<Bell size={22} />
-// 			<span className="text-[10px] mt-1">Notifications</span>
-// 			{unreadNotificationCount > 0 && (
-// 				<span className="absolute top-1 right-8 bg-red-700 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
-// 					{unreadNotificationCount}
-// 				</span>
-// 			)}
-// 		</Link>
-
-// 		{/* Profile */}
-// 		<Link
-// 			to={`/profile/${authUser.username}`}
-// 			className={`flex flex-col items-center border-none px-5 py-2 ${getLinkClass(`/profile/${authUser.username}`)}`}
-// 		>
-// 			<User size={22} />
-// 			<span className="text-[10px] mt-1">Me</span>
-// 		</Link>
-// 	</div>
-// </div> */}
-
-

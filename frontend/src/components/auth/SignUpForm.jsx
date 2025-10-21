@@ -12,7 +12,7 @@ const SignUpForm = () => {
 
 	const queryClient = useQueryClient();
 
-	const { mutate: signUpMutation, isLoading } = useMutation({
+	const { mutate: signUpMutation, isPending } = useMutation({
 		mutationFn: async (data) => {
 			const res = await axiosInstance.post("/auth/signup", data);
 			return res.data;
@@ -66,8 +66,19 @@ const SignUpForm = () => {
 				required
 			/>
 
-			<button type='submit' disabled={isLoading} className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold'>
-				{isLoading ? <Loader className='size-5 animate-spin' /> : "Agree & Join"}
+			<button
+				type='submit'
+				disabled={isPending}
+				className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold flex justify-center items-center gap-2'
+			>
+				{isPending ? (
+					<>
+						<Loader className='size-5 animate-spin' />
+						<span>Signing Up...</span>
+					</>
+				) : (
+					"Agree & Join"
+				)}
 			</button>
 		</form>
 	);

@@ -9,7 +9,7 @@ const LoginForm = () => {
 	const [password, setPassword] = useState("");
 	const queryClient = useQueryClient();
 
-	const { mutate: loginMutation, isLoading } = useMutation({
+	const { mutate: loginMutation, isPending } = useMutation({
 		mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
@@ -43,8 +43,19 @@ const LoginForm = () => {
 				required
 			/>
 
-			<button type='submit' className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold'>
-				{isLoading ? <Loader className='size-5 animate-spin' /> : "Login"}
+			<button
+				type='submit'
+				className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold flex justify-center items-center gap-2'
+				disabled={isPending}
+			>
+				{isPending ? (
+					<>
+						<Loader className='size-5 animate-spin' />
+						<span>Logging in...</span>
+					</>
+				) : (
+					"Login"
+				)}
 			</button>
 		</form>
 	);

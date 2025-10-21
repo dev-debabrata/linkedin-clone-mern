@@ -32,6 +32,38 @@ _None provided by default._ If you deploy this project to a service (e.g., Rende
 
 --- -->
 
+## 📸 Screenshots
+
+### Login Page
+
+![Login Page](./frontend/public/login-page.png)
+
+### Home Page
+
+![Home page](./frontend/public/home.png)
+
+### Profile Page
+
+![Profile page](./frontend/public/my-profile.png)
+
+### My Network Page
+
+![Network Page](./frontend/public/my-network.png)
+
+### Notification Page
+
+![Notification page](./frontend/public/notifications.png)
+
+### Suggestions Page
+
+![Suggestions page](./frontend/public/suggetions.png)
+
+### Suggestion Profile Page
+
+![Suggestion Profile page](./frontend/public/other-profile.png)
+
+---
+
 ## Features
 
 - User signup / login with JWT-based authentication

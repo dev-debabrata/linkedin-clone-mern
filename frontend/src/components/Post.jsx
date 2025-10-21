@@ -269,6 +269,15 @@ const Post = ({ post }) => {
 			reader.readAsDataURL(file);
 		});
 
+
+	if (isDeletingPost) {
+		return (
+			<div className="fixed inset-0 flex justify-center items-center bg-black/30 z-50">
+				<Loader size={48} className="animate-spin text-primary" />
+			</div>
+		);
+	}
+
 	return (
 		<div className='bg-secondary rounded-lg shadow mb-2 md:mb-4 lg:mb-4'>
 			<div className='p-4'>
@@ -467,7 +476,7 @@ const Post = ({ post }) => {
 						<h2 className='text-lg font-semibold mb-4'>Edit Post</h2>
 
 						<textarea
-							className='w-full p-3 rounded-lg focus:outline-none resize-none mb-2'
+							className='w-full p-3 rounded-lg bg-base-100 hover:bg-base-200 focus:outline-none resize-none mb-2'
 							value={editedContent}
 							onChange={(e) => setEditedContent(e.target.value)}
 							rows={8}

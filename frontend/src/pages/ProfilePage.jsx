@@ -8,6 +8,7 @@ import ExperienceSection from "../components/ExperienceSection";
 import EducationSection from "../components/EducationSection";
 import SkillsSection from "../components/SkillsSection";
 import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 const ProfilePage = () => {
 	const { username } = useParams();
@@ -43,7 +44,12 @@ const ProfilePage = () => {
 
 	// if (isLoading || isUserProfileLoading) return null;
 	if (isUserProfileLoading || !userProfile || !authUser) {
-		return null;
+
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader size={48} className="animate-spin text-primary" />
+			</div>
+		);
 	}
 
 	const isOwnProfile = authUser.username === userProfile.data.username;

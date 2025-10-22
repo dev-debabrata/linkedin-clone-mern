@@ -1,5 +1,6 @@
 import cloudinary from "../lib/cloudinary.js";
 import Post from "../models/post.model.js";
+import User from "../models/user.model.js"
 import Notification from "../models/notification.model.js";
 import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
 
@@ -120,11 +121,14 @@ export const createComment = async (req, res) => {
 		const { content } = req.body;
 		const userId = req.user._id;
 
+		const commenter = await User.findById(userId).select("name email username");
+		if (!commenter) {
+			return res.status(404).json({ message: "Commenter not found" });
+		}
+
 		const updatedPost = await Post.findByIdAndUpdate(
 			postId,
-			{
-				$push: { comments: { user: userId, content } },
-			},
+			{ $push: { comments: { user: userId, content } } },
 			{ new: true }
 		);
 
@@ -132,48 +136,51 @@ export const createComment = async (req, res) => {
 			return res.status(404).json({ message: "Post not found" });
 		}
 
-		const newCommentSubdocument = updatedPost.comments[updatedPost.comments.length - 1];
-
-		const postWithPopulatedComments = await Post.findById(postId)
+		const postWithAuthor = await Post.findById(postId)
+			.populate("author", "name email username")
 			.populate("comments.user", "name profilePicture username headline");
 
-		const fullyPopulatedNewComment = postWithPopulatedComments.comments.find(
-			c => c._id.equals(newCommentSubdocument._id)
-		);
+		const newComment = postWithAuthor.comments.slice(-1)[0];
 
-		if (updatedPost.author._id.toString() !== userId.toString()) {
-			const newNotification = new Notification({
-				recipient: updatedPost.author,
-				type: "comment",
-				relatedUser: userId,
-				relatedPost: postId,
-			});
-
-			await newNotification.save();
-
-			try {
-				const postUrl = process.env.CLIENT_URL + "/post/" + postId;
-				await sendCommentNotificationEmail(
-					updatedPost.author.email,
-					updatedPost.author.name,
-					req.user.name,
-					postUrl,
-					content
-				);
-			} catch (error) {
-				console.log("Error in sending comment notification email:", error);
-			}
-		}
 		res.status(201).json({
 			message: "Comment created successfully",
-			comment: fullyPopulatedNewComment
+			comment: newComment,
 		});
 
+		if (postWithAuthor.author._id.toString() !== userId.toString()) {
+			(async () => {
+				try {
+					const newNotification = new Notification({
+						recipient: postWithAuthor.author._id,
+						type: "comment",
+						relatedUser: userId,
+						relatedPost: postId,
+					});
+					await newNotification.save();
+
+					// const postUrl = `${process.env.CLIENT_URL || "https://linkedin-clone-dev.vercel.app"}/post/${postId}`;
+					const postUrl = `${process.env.CLIENT_URL}/post/${postId}`;
+
+					console.log("Sending comment email to:", postWithAuthor.author.email);
+					await sendCommentNotificationEmail(
+						postWithAuthor.author.email,
+						postWithAuthor.author.name,
+						commenter.name,
+						postUrl,
+						content
+					);
+					console.log("Comment notification email sent successfully!");
+				} catch (emailError) {
+					console.error("Error sending comment notification email:", emailError);
+				}
+			})();
+		}
 	} catch (error) {
 		console.error("Error in createComment controller:", error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
 
 // Delete a comment
 export const deleteComment = async (req, res) => {
@@ -230,3 +237,68 @@ export const likePost = async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+
+
+
+
+// export const createComment = async (req, res) => {
+// 	try {
+// 		const postId = req.params.id;
+// 		const { content } = req.body;
+// 		const userId = req.user._id;
+
+// 		const updatedPost = await Post.findByIdAndUpdate(
+// 			postId,
+// 			{ $push: { comments: { user: userId, content } } },
+// 			{ new: true }
+// 		).populate("author", "name email");
+
+// 		if (!updatedPost) {
+// 			return res.status(404).json({ message: "Post not found" });
+// 		}
+
+// 		const newCommentSubdocument = updatedPost.comments[updatedPost.comments.length - 1];
+
+// 		const postWithPopulatedComments = await Post.findById(postId)
+// 			.populate("comments.user", "name profilePicture username headline");
+
+// 		const fullyPopulatedNewComment = postWithPopulatedComments.comments.find(
+// 			c => c._id.equals(newCommentSubdocument._id)
+// 		);
+
+// 		if (updatedPost.author._id.toString() !== userId.toString()) {
+// 			const newNotification = new Notification({
+// 				recipient: updatedPost.author,
+// 				type: "comment",
+// 				relatedUser: userId,
+// 				relatedPost: postId,
+// 			});
+
+// 			await newNotification.save();
+
+// 			try {
+// 				// const postUrl = process.env.CLIENT_URL + "/post/" + postId;
+// 				const postUrl = `${process.env.CLIENT_URL || "https://linkedin-clone-dev.vercel.app"}/post/${postId}`;
+
+// 				await sendCommentNotificationEmail(
+// 					updatedPost.author.email,
+// 					updatedPost.author.name,
+// 					req.user.name,
+// 					postUrl,
+// 					content
+// 				);
+// 			} catch (error) {
+// 				console.log("Error in sending comment notification email:", error);
+// 			}
+// 		}
+// 		res.status(201).json({
+// 			message: "Comment created successfully",
+// 			comment: fullyPopulatedNewComment
+// 		});
+
+// 	} catch (error) {
+// 		console.error("Error in createComment controller:", error);
+// 		res.status(500).json({ message: "Server error" });
+// 	}
+// };

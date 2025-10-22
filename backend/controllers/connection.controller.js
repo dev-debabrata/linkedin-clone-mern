@@ -79,6 +79,8 @@ export const acceptConnectionRequest = async (req, res) => {
 		const senderName = request.sender.name;
 		const recipientName = request.recipient.name;
 		const profileUrl = process.env.CLIENT_URL + "/profile/" + request.recipient.username;
+		// const profileUrl = `${process.env.CLIENT_URL || "https://linkedin-clone-dev.vercel.app"}/profile/${request.recipient.username}`;
+
 
 		try {
 			await sendConnectionAcceptedEmail(senderEmail, senderName, recipientName, profileUrl);

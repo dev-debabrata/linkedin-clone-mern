@@ -51,6 +51,8 @@ export const signup = async (req, res) => {
 		res.status(201).json({ message: "User registered successfully" });
 
 		const profileUrl = `${process.env.CLIENT_URL}/profile/${user.username}`;
+		// const profileUrl = `${process.env.CLIENT_URL || "https://linkedin-clone-dev.vercel.app"}/profile/${user.username}`;
+
 
 		try {
 			await sendWelcomeEmail(user.email, user.name, profileUrl);

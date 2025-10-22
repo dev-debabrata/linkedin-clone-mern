@@ -157,7 +157,7 @@ const NotificationsPage = () => {
 												{!notification.read && (
 													<button
 														onClick={() => markAsReadMutation(notification._id)}
-														className='p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors'
+														className='p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors cursor-pointer'
 														aria-label='Mark as read'
 													>
 														<Eye size={16} />
@@ -166,7 +166,7 @@ const NotificationsPage = () => {
 
 												<button
 													onClick={() => deleteNotificationMutation(notification._id)}
-													className='p-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors'
+													className='p-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors cursor-pointer'
 													aria-label='Delete notification'
 												>
 													<Trash2 size={16} />

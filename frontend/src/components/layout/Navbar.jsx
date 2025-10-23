@@ -307,7 +307,11 @@ const Navbar = () => {
 														Profile
 													</Link>
 													<button
-														onClick={() => logout()}
+														// onClick={() => logout()}
+														onClick={() => {
+															setIsDropdownOpen(false);
+															logout();
+														}}
 														className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
 													>
 														<LogOut size={16} className="mr-2" />

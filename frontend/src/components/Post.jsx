@@ -43,58 +43,12 @@ const Post = ({ post }) => {
 
 	const isOwner = authUser._id === post.author._id;
 	const isLiked = post.likes.includes(authUser._id);
-	const commentSectionRef = useRef(null);
 
+
+	const commentSectionRef = useRef(null);
+	const commentButtonRef = useRef(null);
 	const menuRef = useRef(null);
 	const modalRef = useRef(null);
-
-	// Close menu when click outside
-	useEffect(() => {
-		const handleClickOutsideMenu = (e) => {
-			if (menuRef.current && !menuRef.current.contains(e.target)) {
-				setShowMenu(false);
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutsideMenu);
-		return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
-	}, []);
-
-
-	// Close comment outside click
-	useEffect(() => {
-		const handleClickOutsideComments = (e) => {
-			if (
-				commentSectionRef.current &&
-				!commentSectionRef.current.contains(e.target)
-			) {
-				setShowComments(false);
-			}
-		};
-
-		if (showComments) {
-			document.addEventListener("mousedown", handleClickOutsideComments);
-		} else {
-			document.removeEventListener("mousedown", handleClickOutsideComments);
-		}
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutsideComments);
-		};
-	}, [showComments]);
-
-
-	// Close modal when click outside
-	useEffect(() => {
-		const handleClickOutsideModal = (e) => {
-			if (modalRef.current && !modalRef.current.contains(e.target)) {
-				setIsEditModalOpen(false);
-			}
-		};
-		if (isEditModalOpen) {
-			document.addEventListener("mousedown", handleClickOutsideModal);
-		}
-		return () => document.removeEventListener("mousedown", handleClickOutsideModal);
-	}, [isEditModalOpen]);
 
 	// Delete Post
 	const { mutate: deletePost, isPending: isDeletingPost } = useMutation({
@@ -179,22 +133,8 @@ const Post = ({ post }) => {
 		},
 	});
 
-	// const { mutate: createComment, isPending: isAddingComment } = useMutation({
-	// 	mutationFn: async (comment) => {
-	// 		await axiosInstance.post(`/posts/${post._id}/comment`, { content: comment });
-	// 	},
-	// 	onSuccess: () => {
-	// 		queryClient.invalidateQueries({ queryKey: ["posts"] });
-	// 		toast.success("Comment added successfully");
-	// 	},
-	// 	onError: (err) => {
-	// 		toast.error(err.response?.data?.message || "Failed to add comment");
-	// 	},
-	// });
 
 	// 🗑 Delete Comment
-
-
 	const { mutate: deleteComment, isPending: isDeletingComment } = useMutation({
 		mutationFn: async (commentId) => {
 			await axiosInstance.delete(`/posts/${post._id}/comments/${commentId}`);
@@ -209,6 +149,81 @@ const Post = ({ post }) => {
 		},
 	});
 
+
+
+	// Close menu when click outside
+	useEffect(() => {
+		const handleClickOutsideMenu = (e) => {
+			if (menuRef.current && !menuRef.current.contains(e.target)) {
+				setShowMenu(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutsideMenu);
+		return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
+	}, []);
+
+
+	// Close comment outside click
+	useEffect(() => {
+		const handleClickOutsideComments = (e) => {
+			const clickedOutsideSection =
+				commentSectionRef.current &&
+				!commentSectionRef.current.contains(e.target);
+
+			const clickedOutsideButton =
+				commentButtonRef.current &&
+				!commentButtonRef.current.contains(e.target);
+
+			if (showComments && clickedOutsideSection && clickedOutsideButton) {
+				setShowComments(false);
+			}
+		};
+
+		if (showComments) {
+			document.addEventListener("mousedown", handleClickOutsideComments);
+		} else {
+			document.removeEventListener("mousedown", handleClickOutsideComments);
+		}
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutsideComments);
+		};
+	}, [showComments]);
+
+	// useEffect(() => {
+	// 	const handleClickOutsideComments = (e) => {
+	// 		if (
+	// 			commentSectionRef.current &&
+	// 			!commentSectionRef.current.contains(e.target)
+	// 		) {
+	// 			setShowComments(false);
+	// 		}
+	// 	};
+
+	// 	if (showComments) {
+	// 		document.addEventListener("mousedown", handleClickOutsideComments);
+	// 	} else {
+	// 		document.removeEventListener("mousedown", handleClickOutsideComments);
+	// 	}
+
+	// 	return () => {
+	// 		document.removeEventListener("mousedown", handleClickOutsideComments);
+	// 	};
+	// }, [showComments]);
+
+
+	// Close modal when click outside
+	useEffect(() => {
+		const handleClickOutsideModal = (e) => {
+			if (modalRef.current && !modalRef.current.contains(e.target)) {
+				setIsEditModalOpen(false);
+			}
+		};
+		if (isEditModalOpen) {
+			document.addEventListener("mousedown", handleClickOutsideModal);
+		}
+		return () => document.removeEventListener("mousedown", handleClickOutsideModal);
+	}, [isEditModalOpen]);
 
 
 	// Handlers
@@ -382,11 +397,32 @@ const Post = ({ post }) => {
 						onClick={handleLikePost}
 					/>
 
-					<PostAction
+					<div ref={commentButtonRef}>
+						<PostAction
+							icon={<MessageCircle size={18} />}
+							text={`Comment (${comments.length})`}
+							onClick={() => setShowComments(!showComments)}
+						/>
+					</div>
+
+					{/* <button
+						ref={commentButtonRef}
+						type="button"
+						onClick={() => setShowComments(!showComments)}
+						className="inline-flex items-center focus:outline-none"
+					>
+						<PostAction
+							icon={<MessageCircle size={18} />}
+							text={`Comment (${comments.length})`}
+						/>
+					</button> */}
+
+
+					{/* <PostAction
 						icon={<MessageCircle size={18} />}
 						text={`Comment (${comments.length})`}
 						onClick={() => setShowComments(!showComments)}
-					/>
+					/> */}
 
 					<PostAction
 						icon={<Share2 size={18} />}
@@ -440,7 +476,9 @@ const Post = ({ post }) => {
 						))}
 					</div>
 
-					<form onSubmit={handleAddComment} className='flex items-center'>
+					<form
+						onSubmit={handleAddComment}
+						className='flex items-center'>
 						<input
 							type='text'
 							value={newComment}
@@ -494,9 +532,15 @@ const Post = ({ post }) => {
 
 						<div className='flex justify-end items-center space-x-3 my-4'>
 							<label className='flex items-center text-info hover:text-info-dark cursor-pointer p-2 bg-gray-200 hover:bg-gray-300 rounded'>
-								<Image size={20} className='mr-1' />
+								<Image
+									size={20}
+									className='mr-1' />
 								<span>Photo</span>
-								<input type='file' accept='image/*' className='hidden' onChange={handleImageChange} />
+								<input
+									type='file'
+									accept='image/*'
+									className='hidden'
+									onChange={handleImageChange} />
 							</label>
 
 							<button

@@ -23,8 +23,14 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 		}
 	};
 
-	const handleDeleteEducation = (id) => {
-		setEducations(educations.filter((edu) => edu._id !== id));
+	const handleDeleteEducation = (id, index) => {
+		if (id) {
+			setEducations(educations.filter((edu) => edu._id !== id));
+		} else {
+			setEducations((prevEducations) =>
+				prevEducations.filter((_, i) => i !== index)
+			);
+		}
 	};
 
 	const handleSave = () => {
@@ -36,7 +42,7 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 		<div className='bg-white shadow rounded-lg p-6 mb-6'>
 			<h2 className='text-xl font-semibold mb-4'>Education</h2>
 			{educations.map((edu, index) => (
-				<div key={edu._id || `${edu._id}-${edu.createdAt}-${index}`}
+				<div key={edu._id || `new-${index}`}
 					className='mb-4 flex justify-between items-start'>
 					<div className='flex items-start'>
 						<School size={20} className='mr-2 mt-1' />
@@ -49,7 +55,7 @@ const EducationSection = ({ userData, isOwnProfile, onSave }) => {
 						</div>
 					</div>
 					{isEditing && (
-						<button onClick={() => handleDeleteEducation(edu._id)} className='text-red-500 cursor-pointer'>
+						<button onClick={() => handleDeleteEducation(edu._id, index)} className='text-red-500 cursor-pointer'>
 							<X size={20} />
 						</button>
 					)}

@@ -29,8 +29,14 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 		}
 	};
 
-	const handleDeleteExperience = (id) => {
-		setExperiences(experiences.filter((exp) => exp._id !== id));
+	const handleDeleteExperience = (id, index) => {
+		if (id) {
+			setExperiences(experiences.filter((exp) => exp._id !== id));
+		} else {
+			setExperiences((prevExperiences) =>
+				prevExperiences.filter((_, i) => i !== index)
+			);
+		}
 	};
 
 	const handleSave = () => {
@@ -50,7 +56,7 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 		<div className='bg-white shadow rounded-lg p-6 mb-6'>
 			<h2 className='text-xl font-semibold mb-4'>Experience</h2>
 			{experiences.map((exp, index) => (
-				<div key={exp._id || `${exp._id}-${exp.createdAt}-${index}`}
+				<div key={exp._id || `new-exp-${index}`}
 					className='mb-4 flex justify-between items-start'>
 					<div className='flex items-start'>
 						<Briefcase size={20} className='mr-2 mt-1' />
@@ -64,7 +70,7 @@ const ExperienceSection = ({ userData, isOwnProfile, onSave }) => {
 						</div>
 					</div>
 					{isEditing && (
-						<button onClick={() => handleDeleteExperience(exp._id)} className='text-red-500 cursor-pointer'>
+						<button onClick={() => handleDeleteExperience(exp._id, index)} className='text-red-500 cursor-pointer'>
 							<X size={20} />
 						</button>
 					)}

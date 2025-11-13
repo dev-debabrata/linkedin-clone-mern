@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Sidebar from "../components/Sidebar";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Loader } from "lucide-react";
 import FriendRequest from "../components/FriendRequest";
 import UserCard from "../components/UserCard";
 import RecommendedUser from "../components/RecommendedUser";
@@ -11,21 +11,42 @@ const NetworkPage = () => {
 	const queryClient = useQueryClient();
 	const user = queryClient.getQueryData(["authUser"]);
 
-	const { data: connectionRequests } = useQuery({
+	const {
+		data: connectionRequests,
+		isLoading: loadingRequests,
+	} = useQuery({
 		queryKey: ["connectionRequests"],
 		queryFn: () => axiosInstance.get("/connections/requests"),
 	});
 
-	const { data: connections } = useQuery({
+	const {
+		data: connections,
+		isLoading: loadingConnections,
+	} = useQuery({
 		queryKey: ["connections"],
 		queryFn: () => axiosInstance.get("/connections"),
 	});
 
-	const { data: recommendedUsers } = useQuery({
+	const {
+		data: recommendedUsers,
+		isLoading: loadingRecommended,
+	} = useQuery({
 		queryKey: ["recommendedUsers"],
 		queryFn: () =>
 			axiosInstance.get("/users/suggestions?limit=3").then(res => res.data),
 	});
+
+
+	// Loading
+	const isLoading = loadingRequests || loadingConnections || loadingRecommended;
+
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader size={48} className="animate-spin text-primary" />
+			</div>
+		);
+	}
 
 	return (
 		<div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>

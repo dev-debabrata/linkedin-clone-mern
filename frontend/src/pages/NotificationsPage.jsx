@@ -6,14 +6,12 @@ import { ExternalLink, Eye, MessageSquare, ThumbsUp, Trash2, UserPlus } from "lu
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { formatDistanceToNow } from "date-fns";
+import { Loader } from "lucide-react";
 
 const NotificationsPage = () => {
-	// const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
 	const queryClient = useQueryClient();
 	const authUser = queryClient.getQueryData(["authUser"]);
-
-
 
 	const { data: notifications, isLoading } = useQuery({
 		queryKey: ["notifications"],
@@ -116,7 +114,9 @@ const NotificationsPage = () => {
 					<h1 className='text-2xl font-bold mb-6'>Notifications</h1>
 
 					{isLoading ? (
-						<p>Loading notifications...</p>
+						<div className="flex items-center gap-2">
+							<Loader size={18} className="animate-spin" /> <span>Loading notifications...</span>
+						</div>
 					) : notifications && notifications.data.length > 0 ? (
 						<ul>
 							{notifications.data.map((notification) => (

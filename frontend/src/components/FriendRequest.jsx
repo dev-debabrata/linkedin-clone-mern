@@ -13,7 +13,7 @@ const FriendRequest = ({ request }) => {
 			queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
 		},
 		onError: (error) => {
-			toast.error(error.response.data.error);
+			toast.error(error?.response?.data?.error || "Failed to accept request");
 		},
 	});
 
@@ -24,14 +24,16 @@ const FriendRequest = ({ request }) => {
 			queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
 		},
 		onError: (error) => {
-			toast.error(error.response.data.error);
+			toast.error(error?.response?.data?.error || "Failed to reject request");
+
 		},
 	});
 
 	return (
 		<div className='bg-white rounded-lg shadow p-4 flex items-center justify-between transition-all hover:shadow-md'>
 			<div className='flex items-center gap-3 md:gap-4 lg:gap-4'>
-				<Link to={`/profile/${request.sender.username}`}>
+				<Link
+					to={`/profile/${request.sender.username}`}>
 					<img
 						src={request.sender.profilePicture || "/avatar.png"}
 						alt={request.name}
@@ -40,7 +42,9 @@ const FriendRequest = ({ request }) => {
 				</Link>
 
 				<div>
-					<Link to={`/profile/${request.sender.username}`} className='font-semibold text-[16px] md:text-lg lg:text-lg'>
+					<Link
+						to={`/profile/${request.sender.username}`}
+						className='font-semibold text-[16px] md:text-lg lg:text-lg'>
 						{request.sender.name}
 					</Link>
 					<p className='text-gray-600 truncate max-w-[100px] md:max-w-[350px] lg:max-w-[400px]'>{request.sender.headline}</p>

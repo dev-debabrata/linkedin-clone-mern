@@ -25,12 +25,14 @@ function App() {
         const res = await axiosInstance.get("/auth/me");
         return res.data;
       } catch (err) {
-        if (err.response && err.response.status === 401) {
+        if (err.response?.status === 401) {
           return null;
         }
-        toast.error(err.response.data.message || "Something went wrong");
+        toast.error(err.response?.data?.message || "Something went wrong");
+        return null;
       }
     },
+    retry: false,
   });
 
   if (isLoading) return null;

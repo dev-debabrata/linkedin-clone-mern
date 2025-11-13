@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Sidebar from "../components/Sidebar";
 import PostCreation from "../components/PostCreation";
@@ -9,28 +9,11 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
 
-	// const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+	// AuthUser
+	const queryClient = useQueryClient();
+	const authUser = queryClient.getQueryData(["authUser"]);
 
-	// const queryClient = useQueryClient();
-	// const authUser = queryClient.getQueryData(["authUser"]);
-
-	const { data: authUser,
-		isLoading: userLoading,
-	} = useQuery({
-		queryKey: ["authUser"],
-		queryFn: async () => {
-			try {
-				const res = await axiosInstance.get("/auth/me");
-				return res.data;
-			} catch (error) {
-				if (error.response?.status === 401) {
-					return null;
-				}
-				throw error;
-			}
-		},
-	});
-
+	// RecomendedUser
 	const { data: recommendedUsers,
 		isLoading: recommendedLoading,
 	} = useQuery({
@@ -39,14 +22,7 @@ const HomePage = () => {
 			axiosInstance.get("/users/suggestions?limit=4").then(res => res.data),
 	});
 
-	// const { data: recommendedUsers } = useQuery({
-	// 	queryKey: ["recommendedUsers"],
-	// 	queryFn: async () => {
-	// 		const res = await axiosInstance.get("/users/suggestions");
-	// 		return res.data;
-	// 	},
-	// });
-
+	// Post
 	const { data: posts,
 		isLoading: postsLoading,
 	} = useQuery({
@@ -58,7 +34,8 @@ const HomePage = () => {
 	});
 
 
-	if (userLoading || postsLoading || recommendedLoading) {
+	// Loading
+	if (postsLoading || recommendedLoading) {
 		return (
 			<div className="flex justify-center items-center h-screen">
 				<Loader size={48} className="animate-spin text-primary" />

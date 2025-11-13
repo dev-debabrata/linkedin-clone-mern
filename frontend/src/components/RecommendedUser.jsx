@@ -106,7 +106,9 @@ const RecommendedUser = ({ user }) => {
 	};
 
 	const handleConnect = () => {
-		if (connectionStatus?.data?.status === "not_connected") {
+		if (!connectionStatus?.data) return;
+
+		if (connectionStatus.data.status === "not_connected") {
 			sendConnectionRequest(user._id);
 		}
 	};

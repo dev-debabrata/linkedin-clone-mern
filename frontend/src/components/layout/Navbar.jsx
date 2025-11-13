@@ -9,7 +9,10 @@ const Navbar = () => {
 
 	const location = useLocation();
 	const navigate = useNavigate();
+
 	const queryClient = useQueryClient();
+	// AuthUser
+	const authUser = queryClient.getQueryData(["authUser"]);
 
 	const [searchQuery, setSearchQuery] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
@@ -20,22 +23,6 @@ const Navbar = () => {
 	const searchWrapperRef = useRef(null);
 	const searchInputRef = useRef(null);
 	const dropdownRef = useRef(null);
-
-
-
-	// Auth user
-	const { data: authUser } = useQuery({
-		queryKey: ["authUser"],
-		queryFn: async () => {
-			try {
-				const res = await axiosInstance.get("/auth/me");
-				return res.data;
-			} catch (error) {
-				if (error.response?.status === 401) return null;
-				throw error;
-			}
-		},
-	});
 
 	// Notifications
 	const { data: notifications } = useQuery({
@@ -403,8 +390,8 @@ const Navbar = () => {
 
 						{/* Profile */}
 						<Link
-							to={`/profile/${authUser.username}`}
-							className={`flex flex-col items-center border-none px-5 py-2 ${location.pathname.startsWith(`/profile/${authUser.username}`)
+							to={`/profile/${authUser?.username}`}
+							className={`flex flex-col items-center border-none px-5 py-2 ${location.pathname.startsWith(`/profile/${authUser?.username}`)
 								? "text-blue-600 bg-gray-200"
 								: "text-gray-600"
 								}`}

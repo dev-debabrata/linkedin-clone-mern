@@ -149,14 +149,26 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 
 	// Handle image uploads
 	const handleImageChange = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setEditedData((prev) => ({ ...prev, [event.target.name]: reader.result }));
-			};
-			reader.readAsDataURL(file);
+		const file = event.target.files?.[0] ?? null;
+
+		if (!file) {
+			return;
 		}
+
+		const reader = new FileReader();
+
+		reader.onloadend = () => {
+			setEditedData((prev) => ({
+				...prev,
+				[event.target.name]: reader.result,
+			}));
+		};
+
+		reader.onerror = () => {
+			toast.error("Failed to load image");
+		};
+
+		reader.readAsDataURL(file);
 	};
 
 	const handleSave = () => {

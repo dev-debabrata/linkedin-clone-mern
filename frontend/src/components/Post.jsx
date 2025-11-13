@@ -11,8 +11,9 @@ import {
 	Share2,
 	ThumbsUp,
 	Trash2,
+	MoreHorizontal,
+	Image,
 } from "lucide-react";
-import { MoreHorizontal, Image } from "lucide-react";
 import PostAction from "./PostAction";
 
 
@@ -25,25 +26,23 @@ const Post = ({ post }) => {
 
 	const [showComments, setShowComments] = useState(false);
 	const [newComment, setNewComment] = useState("");
-	const [comments, setComments] = useState(post.comments || []);
+	const [comments, setComments] = useState(post?.comments || []);
 
 	const [showMenu, setShowMenu] = useState(false);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-	const [editedContent, setEditedContent] = useState(post.content);
-	const [editedImage, setEditedImage] = useState(post.image || null);
-	const [imagePreview, setImagePreview] = useState(post.image || null);
+	const [editedContent, setEditedContent] = useState(post?.content ?? "");
+	const [editedImage, setEditedImage] = useState(post?.image ?? null);
+	const [imagePreview, setImagePreview] = useState(post?.image ?? null);
 
 	const [expandedContent, setExpandedContent] = useState(false);
 	const maxLength = 200;
-	const isLongContent = post.content && post.content.length > maxLength;
+	const isLongContent = post?.content && post.content.length > maxLength;
 	const displayedContent =
-		expandedContent || !isLongContent
-			? post.content
-			: post.content.slice(0, maxLength);
+		expandedContent || !isLongContent ? post?.content : post?.content.slice(0, maxLength);
 
-	const isOwner = authUser._id === post.author._id;
-	const isLiked = post.likes.includes(authUser._id);
-
+	// guard authUser and post.author
+	const isOwner = authUser?._id && post?.author?._id && authUser._id === post.author._id;
+	const isLiked = Array.isArray(post?.likes) && authUser?._id ? post.likes.includes(authUser._id) : false;
 
 	const commentSectionRef = useRef(null);
 	const commentButtonRef = useRef(null);
@@ -51,21 +50,21 @@ const Post = ({ post }) => {
 	const modalRef = useRef(null);
 
 	// Delete Post
-	const { mutate: deletePost, isPending: isDeletingPost } = useMutation({
+	const { mutate: deletePost, isLoading: isDeletingPost } = useMutation({
 		mutationFn: async () => {
 			await axiosInstance.delete(`/posts/delete/${post._id}`);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
+			queryClient.invalidateQueries(["posts"]);
 			toast.success("Post deleted successfully");
 		},
 		onError: (err) => {
-			toast.error(err.message);
+			toast.error(err?.response?.data?.message || err?.message || "Failed to delete post");
 		},
 	});
 
 	// Update Post
-	const { mutate: updatePost, isPending: isUpdating } = useMutation({
+	const { mutate: updatePost, isLoading: isUpdating } = useMutation({
 		mutationFn: async () => {
 			const postData = { content: editedContent };
 			if (editedImage && typeof editedImage !== "string") {
@@ -74,82 +73,77 @@ const Post = ({ post }) => {
 			await axiosInstance.put(`/posts/update/${post._id}`, postData);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
-			queryClient.invalidateQueries({ queryKey: ["post", postId] });
+			queryClient.invalidateQueries(["posts"]);
+			queryClient.invalidateQueries(["post", postId]);
 			toast.success("Post updated successfully");
 			setIsEditModalOpen(false);
 		},
 		onError: (err) => {
-			toast.error(err.response?.data?.message || "Failed to update post");
+			toast.error(err?.response?.data?.message || "Failed to update post");
 		},
 	});
 
 	// Like Post
-	const { mutate: likePost, isPending: isLikingPost } = useMutation({
+	const { mutate: likePost, isLoading: isLikingPost } = useMutation({
 		mutationFn: async () => {
 			await axiosInstance.post(`/posts/${post._id}/like`);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
-			queryClient.invalidateQueries({ queryKey: ["post", postId] });
+			queryClient.invalidateQueries(["posts"]);
+			queryClient.invalidateQueries(["post", postId]);
 		},
 	});
 
-	// Create Comment
-	const { mutate: createComment, isPending: isAddingComment } = useMutation({
-		mutationFn: async (comment) => {
-
-			const response = await axiosInstance.post(`/posts/${post._id}/comment`, { content: comment });
+	// Create Comment (with optimistic update)
+	const { mutate: createComment, isLoading: isAddingComment } = useMutation({
+		mutationFn: async (commentContent) => {
+			const response = await axiosInstance.post(`/posts/${post._id}/comment`, { content: commentContent });
 			return response.data.comment;
 		},
 		onMutate: async (newCommentContent) => {
-			await queryClient.cancelQueries({ queryKey: ["posts"] });
+			await queryClient.cancelQueries(["posts"]);
 
+			const tempId = `temp-${Date.now()}`;
 			const tempComment = {
-				_id: Date.now() * -1,
+				_id: tempId,
 				content: newCommentContent,
 				user: {
-					_id: authUser._id,
-					name: authUser.name,
-					profilePicture: authUser.profilePicture,
+					_id: authUser?._id,
+					name: authUser?.name,
+					profilePicture: authUser?.profilePicture,
 				},
 				createdAt: new Date().toISOString(),
 			};
 
 			setComments((prev) => [...prev, tempComment]);
 			setNewComment("");
-			return { tempCommentId: tempComment._id };
+			return { tempId };
 		},
-		onSuccess: (newCommentFromServer, _, context) => {
-			setComments((prev) =>
-				prev.map((c) => (c._id === context.tempCommentId ? newCommentFromServer : c))
-			);
+		onSuccess: (serverComment, _, context) => {
+			setComments((prev) => prev.map((c) => (c._id === context.tempId ? serverComment : c)));
 			toast.success("Comment added successfully");
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
+			queryClient.invalidateQueries(["posts"]);
 		},
 		onError: (err, _, context) => {
-			setComments((prev) => prev.filter((c) => c._id !== context.tempCommentId));
-			toast.error(err.response?.data?.message || "Failed to add comment");
+			setComments((prev) => prev.filter((c) => c._id !== context.tempId));
+			toast.error(err?.response?.data?.message || "Failed to add comment");
 		},
 	});
 
-
-	// 🗑 Delete Comment
-	const { mutate: deleteComment, isPending: isDeletingComment } = useMutation({
+	// Delete Comment
+	const { mutate: deleteComment, isLoading: isDeletingComment } = useMutation({
 		mutationFn: async (commentId) => {
 			await axiosInstance.delete(`/posts/${post._id}/comments/${commentId}`);
 		},
 		onSuccess: (_, commentId) => {
 			setComments((prev) => prev.filter((c) => c._id !== commentId));
 			toast.success("Comment deleted");
-			queryClient.invalidateQueries({ queryKey: ["posts"] });
+			queryClient.invalidateQueries(["posts"]);
 		},
 		onError: (err) => {
-			toast.error(err.response?.data?.message || "Failed to delete comment");
+			toast.error(err?.response?.data?.message || "Failed to delete comment");
 		},
 	});
-
-
 
 	// Close menu when click outside
 	useEffect(() => {
@@ -162,17 +156,11 @@ const Post = ({ post }) => {
 		return () => document.removeEventListener("mousedown", handleClickOutsideMenu);
 	}, []);
 
-
-	// Close comment outside click
+	// Close comments when click outside
 	useEffect(() => {
 		const handleClickOutsideComments = (e) => {
-			const clickedOutsideSection =
-				commentSectionRef.current &&
-				!commentSectionRef.current.contains(e.target);
-
-			const clickedOutsideButton =
-				commentButtonRef.current &&
-				!commentButtonRef.current.contains(e.target);
+			const clickedOutsideSection = commentSectionRef.current && !commentSectionRef.current.contains(e.target);
+			const clickedOutsideButton = commentButtonRef.current && !commentButtonRef.current.contains(e.target);
 
 			if (showComments && clickedOutsideSection && clickedOutsideButton) {
 				setShowComments(false);
@@ -190,28 +178,6 @@ const Post = ({ post }) => {
 		};
 	}, [showComments]);
 
-	// useEffect(() => {
-	// 	const handleClickOutsideComments = (e) => {
-	// 		if (
-	// 			commentSectionRef.current &&
-	// 			!commentSectionRef.current.contains(e.target)
-	// 		) {
-	// 			setShowComments(false);
-	// 		}
-	// 	};
-
-	// 	if (showComments) {
-	// 		document.addEventListener("mousedown", handleClickOutsideComments);
-	// 	} else {
-	// 		document.removeEventListener("mousedown", handleClickOutsideComments);
-	// 	}
-
-	// 	return () => {
-	// 		document.removeEventListener("mousedown", handleClickOutsideComments);
-	// 	};
-	// }, [showComments]);
-
-
 	// Close modal when click outside
 	useEffect(() => {
 		const handleClickOutsideModal = (e) => {
@@ -225,6 +191,10 @@ const Post = ({ post }) => {
 		return () => document.removeEventListener("mousedown", handleClickOutsideModal);
 	}, [isEditModalOpen]);
 
+	// Sync comments when post prop changes (optional)
+	useEffect(() => {
+		setComments(post?.comments || []);
+	}, [post?.comments]);
 
 	// Handlers
 	const handleDeletePost = () => {
@@ -241,7 +211,6 @@ const Post = ({ post }) => {
 		e.preventDefault();
 		const content = newComment.trim();
 		if (!content) return;
-
 		createComment(content);
 	};
 
@@ -264,16 +233,20 @@ const Post = ({ post }) => {
 	};
 
 	const handleImageChange = (e) => {
-		const file = e.target.files[0];
-		if (file) {
-			setEditedImage(file);
-			const reader = new FileReader();
-			reader.onloadend = () => setImagePreview(reader.result);
-			reader.readAsDataURL(file);
-		} else {
+		const file = e.target.files?.[0] ?? null;
+		if (!file) {
 			setEditedImage(null);
 			setImagePreview(null);
+			return;
 		}
+		setEditedImage(file);
+		const reader = new FileReader();
+		reader.onloadend = () => setImagePreview(reader.result);
+		reader.onerror = () => {
+			setImagePreview(null);
+			toast.error("Failed to read image");
+		};
+		reader.readAsDataURL(file);
 	};
 
 	const readFileAsDataURL = (file) =>
@@ -283,7 +256,6 @@ const Post = ({ post }) => {
 			reader.onerror = reject;
 			reader.readAsDataURL(file);
 		});
-
 
 	if (isDeletingPost) {
 		return (

@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -15,8 +14,6 @@ import SuggestionsPage from "./pages/SuggestionsPage";
 import PostCreateMobile from "./pages/PostCreateMobile";
 
 
-
-
 function App() {
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
@@ -26,6 +23,7 @@ function App() {
         return res.data;
       } catch (err) {
         if (err.response?.status === 401) {
+          console.log("Auth Check: 401 Unauthorized - User is not logged in.");
           return null;
         }
         toast.error(err.response?.data?.message || "Something went wrong");

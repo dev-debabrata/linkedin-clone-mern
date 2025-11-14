@@ -299,7 +299,7 @@ const Navbar = () => {
 															setIsDropdownOpen(false);
 															logout();
 														}}
-														className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+														className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
 													>
 														<LogOut size={16} className="mr-2" />
 														Sign out

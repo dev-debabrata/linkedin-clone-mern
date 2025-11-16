@@ -96,7 +96,7 @@ const NetworkPage = () => {
 								</div>
 								<div className="space-y-3">
 									{recommendedUsers.map((user) => (
-										<RecommendedUser key={user._id} user={user} />
+										<RecommendedUser key={user._id} user={user} headlineWidth="max-w-[120px]" />
 									))}
 								</div>
 							</div>

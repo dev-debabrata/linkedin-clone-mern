@@ -82,7 +82,7 @@ const HomePage = () => {
 							</Link>
 						</div>
 						{recommendedUsers?.map((user) => (
-							<RecommendedUser key={user._id} user={user} />
+							<RecommendedUser key={user._id} user={user} headlineWidth="max-w-[80px]" />
 						))}
 					</div>
 				</div>

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { Check, Clock, UserCheck, UserPlus, X } from "lucide-react";
 
-const RecommendedUser = ({ user }) => {
+const RecommendedUser = ({ user, headlineWidth = "max-w-[150px]" }) => {
 	const queryClient = useQueryClient();
 
 	const { data: connectionStatus, isLoading } = useQuery({
@@ -125,7 +125,7 @@ const RecommendedUser = ({ user }) => {
 				/>
 				<div>
 					<h3 className='font-semibold text-base md:text-xs lg:text-sm'>{user.name}</h3>
-					<p className=' text-sm md:text-[10px] lg:text-xs text-info truncate max-w-[120px]'>{user.headline}</p>
+					<p className={`text-sm md:text-[10px] lg:text-xs text-info truncate ${headlineWidth}`}>{user.headline}</p>
 				</div>
 			</Link>
 			{renderButton()}

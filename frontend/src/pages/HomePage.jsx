@@ -14,18 +14,14 @@ const HomePage = () => {
 	const authUser = queryClient.getQueryData(["authUser"]);
 
 	// RecomendedUser
-	const { data: recommendedUsers,
-		isLoading: recommendedLoading,
-	} = useQuery({
+	const { data: recommendedUsers, isLoading: recommendedLoading, } = useQuery({
 		queryKey: ["recommendedUsers"],
 		queryFn: () =>
 			axiosInstance.get("/users/suggestions?limit=4").then(res => res.data),
 	});
 
 	// Post
-	const { data: posts,
-		isLoading: postsLoading,
-	} = useQuery({
+	const { data: posts, isLoading: postsLoading, } = useQuery({
 		queryKey: ["posts"],
 		queryFn: async () => {
 			const res = await axiosInstance.get("/posts");

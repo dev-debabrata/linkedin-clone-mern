@@ -11,26 +11,17 @@ const NetworkPage = () => {
 	const queryClient = useQueryClient();
 	const user = queryClient.getQueryData(["authUser"]);
 
-	const {
-		data: connectionRequests,
-		isLoading: loadingRequests,
-	} = useQuery({
+	const { data: connectionRequests, isLoading: loadingRequests, } = useQuery({
 		queryKey: ["connectionRequests"],
 		queryFn: () => axiosInstance.get("/connections/requests"),
 	});
 
-	const {
-		data: connections,
-		isLoading: loadingConnections,
-	} = useQuery({
+	const { data: connections, isLoading: loadingConnections, } = useQuery({
 		queryKey: ["connections"],
 		queryFn: () => axiosInstance.get("/connections"),
 	});
 
-	const {
-		data: recommendedUsers,
-		isLoading: loadingRecommended,
-	} = useQuery({
+	const { data: recommendedUsers, isLoading: loadingRecommended, } = useQuery({
 		queryKey: ["recommendedUsers"],
 		queryFn: () =>
 			axiosInstance.get("/users/suggestions?limit=3").then(res => res.data),

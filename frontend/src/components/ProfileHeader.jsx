@@ -61,7 +61,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 		onError: (error) => toast.error(error.response?.data?.message || "An error occurred"),
 	});
 
-	// 🟡 Delete profile picture mutation
+	// Delete profile picture mutation
 	const { mutate: deleteProfilePicture, isLoading: deletingProfile } = useMutation({
 		mutationFn: async () => {
 			const res = await axiosInstance.delete("/users/profile-picture");
@@ -76,7 +76,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 		onError: (error) => toast.error(error.response?.data?.message || "Failed to delete profile picture"),
 	});
 
-	// 🟡 Delete banner image mutation
+	// Delete banner image mutation
 	const { mutate: deleteBannerImage, isLoading: deletingBanner } = useMutation({
 		mutationFn: async () => {
 			const res = await axiosInstance.delete("/users/banner-image");

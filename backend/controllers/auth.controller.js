@@ -11,33 +11,44 @@ const COOKIE_OPTIONS = {
 	secure: process.env.NODE_ENV === "production",
 };
 
-
 export const signup = async (req, res) => {
 	try {
-		const { name, username, email, password } = req.body;
+		let { name, username, email, password } = req.body;
 
+		// ---------- Basic validation ----------
 		if (!name || !username || !email || !password) {
 			return res.status(400).json({ message: "All fields are required" });
 		}
+
+		email = email.toLowerCase().trim();
+		username = username.toLowerCase().trim();
 
 		if (!validator.isEmail(email)) {
 			return res.status(400).json({ message: "Invalid email address" });
 		}
 
-		const domain = email.split("@")[1];
-		if (domain !== "gmail.com") {
+		// ---------- Gmail-only restriction ----------
+		if (!email.endsWith("@gmail.com")) {
 			return res.status(400).json({
-				message: "Invalid email address"
+				message: "Only Gmail addresses are allowed",
 			});
 		}
 
+		// ---------- Check duplicates ----------
 		const existingEmail = await User.findOne({ email });
 		if (existingEmail) {
 			return res.status(400).json({ message: "Email already exists" });
 		}
 
+		const existingUsername = await User.findOne({ username });
+		if (existingUsername) {
+			return res.status(400).json({ message: "Username already taken" });
+		}
+
+		// ---------- Password hashing ----------
 		const hashedPassword = await bcrypt.hash(password, 10);
 
+		// ---------- Create user ----------
 		const user = new User({
 			name,
 			email,
@@ -47,6 +58,7 @@ export const signup = async (req, res) => {
 
 		await user.save();
 
+		// ---------- JWT ----------
 		const token = jwt.sign(
 			{ userId: user._id },
 			process.env.JWT_SECRET,
@@ -55,8 +67,15 @@ export const signup = async (req, res) => {
 
 		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
 
-		res.status(201).json({ message: "User registered successfully" });
+		// ---------- Response ----------
+		res.status(201).json({
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			username: user.username,
+		});
 
+		// ---------- Welcome email (non-blocking) ----------
 		const profileUrl = `${process.env.CLIENT_URL}/profile/${user.username}`;
 		sendWelcomeEmail(user.email, user.name, profileUrl)
 			.catch(err => console.error("Email failed:", err.message));
@@ -66,6 +85,61 @@ export const signup = async (req, res) => {
 		res.status(500).json({ message: "Internal server error" });
 	}
 };
+
+// export const signup = async (req, res) => {
+// 	try {
+// 		const { name, username, email, password } = req.body;
+
+// 		if (!name || !username || !email || !password) {
+// 			return res.status(400).json({ message: "All fields are required" });
+// 		}
+
+// 		if (!validator.isEmail(email)) {
+// 			return res.status(400).json({ message: "Invalid email address" });
+// 		}
+
+// 		const domain = email.split("@")[1];
+// 		if (domain !== "gmail.com") {
+// 			return res.status(400).json({
+// 				message: "Invalid email address"
+// 			});
+// 		}
+
+// 		const existingEmail = await User.findOne({ email });
+// 		if (existingEmail) {
+// 			return res.status(400).json({ message: "Email already exists" });
+// 		}
+
+// 		const hashedPassword = await bcrypt.hash(password, 10);
+
+// 		const user = new User({
+// 			name,
+// 			email,
+// 			username,
+// 			password: hashedPassword,
+// 		});
+
+// 		await user.save();
+
+// 		const token = jwt.sign(
+// 			{ userId: user._id },
+// 			process.env.JWT_SECRET,
+// 			{ expiresIn: "3d" }
+// 		);
+
+// 		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
+
+// 		res.status(201).json({ message: "User registered successfully" });
+
+// 		const profileUrl = `${process.env.CLIENT_URL}/profile/${user.username}`;
+// 		sendWelcomeEmail(user.email, user.name, profileUrl)
+// 			.catch(err => console.error("Email failed:", err.message));
+
+// 	} catch (error) {
+// 		console.error("Error in signup:", error);
+// 		res.status(500).json({ message: "Internal server error" });
+// 	}
+// };
 
 
 

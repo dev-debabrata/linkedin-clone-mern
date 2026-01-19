@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -42,6 +43,11 @@ const Navbar = () => {
 		mutationFn: () => axiosInstance.post("/auth/logout"),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
+			toast.success("Logged out successfully");
+			navigate("/login");
+		},
+		onError: () => {
+			toast.error("Logout failed. Try again!");
 		},
 	});
 
@@ -269,7 +275,7 @@ const Navbar = () => {
 											<span className="hidden md:inline">Sign out</span>
 										</button> */}
 
-										{/* ✅ Profile Picture */}
+										{/* Profile Picture */}
 										<div className="relative " ref={dropdownRef}>
 											<button
 												onClick={() => setIsDropdownOpen((prev) => !prev)}

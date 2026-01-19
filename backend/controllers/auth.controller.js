@@ -4,12 +4,15 @@ import jwt from "jsonwebtoken";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import validator from "validator";
 
+
+
 const COOKIE_OPTIONS = {
 	httpOnly: true,
 	maxAge: 3 * 24 * 60 * 60 * 1000,
 	sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
 	secure: process.env.NODE_ENV === "production",
 };
+
 
 export const signup = async (req, res) => {
 	try {
@@ -112,6 +115,7 @@ export const login = async (req, res) => {
 	}
 };
 
+
 export const logout = (req, res) => {
 	res.clearCookie("jwt-linkedin", {
 		httpOnly: true,
@@ -121,6 +125,7 @@ export const logout = (req, res) => {
 	res.json({ message: "Logged out successfully" });
 };
 
+
 export const getCurrentUser = async (req, res) => {
 	try {
 		res.json(req.user);
@@ -129,4 +134,5 @@ export const getCurrentUser = async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
 

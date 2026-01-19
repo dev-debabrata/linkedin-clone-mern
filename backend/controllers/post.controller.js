@@ -4,6 +4,8 @@ import User from "../models/user.model.js"
 import Notification from "../models/notification.model.js";
 import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
 
+
+
 export const getFeedPosts = async (req, res) => {
 	try {
 		const posts = await Post.find({ author: { $in: [...req.user.connections, req.user._id] } })
@@ -237,3 +239,5 @@ export const likePost = async (req, res) => {
 		res.status(500).json({ message: "Server error" });
 	}
 };
+
+

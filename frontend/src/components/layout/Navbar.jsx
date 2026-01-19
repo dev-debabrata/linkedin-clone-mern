@@ -6,6 +6,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Bell, Home, LogOut, Search, User, Users, SquarePlus, X } from "lucide-react";
 
 
+
+
 const Navbar = () => {
 
 	const location = useLocation();

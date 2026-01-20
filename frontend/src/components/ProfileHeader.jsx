@@ -186,7 +186,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 				{isEditing && (
 					<div className='absolute top-2 right-2 flex gap-2'>
 						{/* Upload Banner */}
-						<label className='bg-white p-2 rounded-full shadow cursor-pointer'>
+						<label className='bg-white p-2 rounded-full shadow hover:bg-gray-200 cursor-pointer'>
 							<Camera size={20} />
 							<input type='file' className='hidden' name='bannerImg' onChange={handleImageChange} accept='image/*' />
 						</label>
@@ -208,7 +208,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 					{isEditing && (
 						<>
 							{/* Upload */}
-							<label className='absolute bottom-0 right-[calc(50%-4rem)] bg-white p-2 rounded-full shadow cursor-pointer'>
+							<label className='absolute bottom-0 right-[calc(50%-4rem)] bg-white p-2 rounded-full shadow hover:bg-gray-200 cursor-pointer'>
 								<Camera size={20} />
 								<input type='file' className='hidden' name='profilePicture' onChange={handleImageChange} accept='image/*' />
 							</label>

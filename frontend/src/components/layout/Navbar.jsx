@@ -46,7 +46,6 @@ const Navbar = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
 			toast.success("Logged out successfully");
-			// 	navigate("/login");
 		},
 		onError: () => {
 			toast.error("Logout failed. Try again!");

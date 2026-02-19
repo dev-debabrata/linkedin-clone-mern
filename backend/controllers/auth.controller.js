@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
 	try {
 		let { name, username, email, password } = req.body;
 
-		// ---------- Basic validation ----------
+		// Basic validation
 		if (!name || !username || !email || !password) {
 			return res.status(400).json({ message: "All fields are required" });
 		}
@@ -30,14 +30,14 @@ export const signup = async (req, res) => {
 			return res.status(400).json({ message: "Invalid email address" });
 		}
 
-		// ---------- Gmail-only restriction ----------
+		// Gmail-only restriction
 		if (!email.endsWith("@gmail.com")) {
 			return res.status(400).json({
 				message: "Only Gmail addresses are allowed",
 			});
 		}
 
-		// ---------- Check duplicates ----------
+		// Check duplicates
 		const existingEmail = await User.findOne({ email });
 		if (existingEmail) {
 			return res.status(400).json({ message: "Email already exists" });
@@ -48,10 +48,10 @@ export const signup = async (req, res) => {
 			return res.status(400).json({ message: "Username already taken" });
 		}
 
-		// ---------- Password hashing ----------
+		// Password hashing
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		// ---------- Create user ----------
+		// Create user
 		const user = new User({
 			name,
 			email,
@@ -61,7 +61,7 @@ export const signup = async (req, res) => {
 
 		await user.save();
 
-		// ---------- JWT ----------
+		// JWT
 		const token = jwt.sign(
 			{ userId: user._id },
 			process.env.JWT_SECRET,
@@ -70,7 +70,7 @@ export const signup = async (req, res) => {
 
 		res.cookie("jwt-linkedin", token, COOKIE_OPTIONS);
 
-		// ---------- Response ----------
+		// Response
 		res.status(201).json({
 			_id: user._id,
 			name: user.name,
@@ -78,7 +78,7 @@ export const signup = async (req, res) => {
 			username: user.username,
 		});
 
-		// ---------- Welcome email (non-blocking) ----------
+		// Welcome email (non-blocking)
 		const profileUrl = `${process.env.CLIENT_URL}/profile/${user.username}`;
 		sendWelcomeEmail(user.email, user.name, profileUrl)
 			.catch(err => console.error("Email failed:", err.message));

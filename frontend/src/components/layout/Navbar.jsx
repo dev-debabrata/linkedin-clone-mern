@@ -3,7 +3,8 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Bell, Home, LogOut, Search, User, Users, SquarePlus, X } from "lucide-react";
+import { Bell, Home, LogOut, MessageSquare, Search, Shield, User, Users, SquarePlus, X } from "lucide-react";
+import { conversationsQuery, countUnread } from "../../lib/chat";
 
 
 
@@ -40,11 +41,15 @@ const Navbar = () => {
 		enabled: !!authUser,
 	});
 
+	const { data: conversations } = useQuery({ ...conversationsQuery, enabled: !!authUser });
+
 	// Logout mutation
 	const { mutate: logout } = useMutation({
 		mutationFn: () => axiosInstance.post("/auth/logout"),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["authUser"] });
+			// Drop the previous user's cached data (chats, notifications, ...) and log out without re-asking the server
+			queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== "authUser" });
+			queryClient.setQueryData(["authUser"], null);
 			toast.success("Logged out successfully");
 		},
 		onError: () => {
@@ -140,8 +145,13 @@ const Navbar = () => {
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	const unreadNotificationCount = notifications?.data.filter((notif) => !notif.read).length;
-	const unreadConnectionRequestsCount = connectionRequests?.data?.length;
+	const unreadNotificationCount = Array.isArray(notifications?.data)
+		? notifications.data.filter((notif) => !notif.read).length
+		: 0;
+	const unreadMessagesCount = countUnread(conversations);
+	const unreadConnectionRequestsCount = Array.isArray(connectionRequests?.data)
+		? connectionRequests.data.length
+		: 0;
 
 
 	return (
@@ -226,7 +236,7 @@ const Navbar = () => {
 						<div className="flex items-center gap-2">
 							{authUser ? (
 								<>
-									<div className=" md:flex lg:flex items-center gap-2 md:gap-6">
+									<div className="flex items-center gap-5 md:gap-6">
 										<div className="hidden md:flex lg:flex items-center gap-2 md:gap-6">
 											<Link to="/" className="text-neutral flex flex-col items-center">
 												<Home size={20} />
@@ -259,6 +269,16 @@ const Navbar = () => {
 												)}
 											</Link>
 										</div>
+
+										<Link to="/messages" className="text-neutral flex flex-col items-center relative">
+											<MessageSquare size={20} className="size-6 md:size-5" />
+											<span className="text-xs hidden md:block">Messaging</span>
+											{unreadMessagesCount > 0 && (
+												<span className="absolute -top-1 -right-1 md:right-3 bg-red-700 text-white text-xs rounded-full size-4 flex items-center justify-center">
+													{unreadMessagesCount}
+												</span>
+											)}
+										</Link>
 
 										{/* <Link
 											to={`/profile/${authUser.username}`}
@@ -299,6 +319,14 @@ const Navbar = () => {
 													>
 														<User size={16} className="mr-2" />
 														Profile
+													</Link>
+													<Link
+														to="/security"
+														onClick={() => setIsDropdownOpen(false)}
+														className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+													>
+														<Shield size={16} className="mr-2" />
+														Security
 													</Link>
 													<button
 														// onClick={() => logout()}

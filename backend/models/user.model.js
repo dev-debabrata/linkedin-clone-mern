@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema(
 		username: { type: String, required: true, unique: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
+		passwordChangedAt: { type: Date, select: false },
+		resetPasswordToken: { type: String, select: false },
+		resetPasswordExpires: { type: Date, select: false },
 		profilePicture: {
 			type: String,
 			default: "",

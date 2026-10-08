@@ -2,6 +2,7 @@ import { sender, transporter } from "../lib/nodemailer.js";
 import {
 	createCommentNotificationEmailTemplate,
 	createConnectionAcceptedEmailTemplate,
+	createPasswordResetEmailTemplate,
 	createWelcomeEmailTemplate,
 } from "./emailTemplates.js";
 
@@ -72,4 +73,13 @@ export const sendConnectionAcceptedEmail = async (
 
 		console.error("Error sending connection accepted email:", error);
 	}
+};
+
+export const sendPasswordResetEmail = async (email, name, resetUrl) => {
+	await transporter.sendMail({
+		from: sender,
+		to: email,
+		subject: "Reset your LinkedIn password",
+		html: createPasswordResetEmailTemplate(name, resetUrl),
+	});
 };

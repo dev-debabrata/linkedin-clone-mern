@@ -1,62 +1,43 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
-import toast from "react-hot-toast";
-import { Loader } from "lucide-react";
+import { useForm } from "../../hooks/useForm";
+import FormInput, { FormError } from "./FormInput";
+import SubmitButton from "./SubmitButton";
 
 const LoginForm = () => {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
 	const queryClient = useQueryClient();
+	const { values, errors, bind, handleSubmit, setServerError } = useForm({ identifier: "", password: "" });
 
-	const { mutate: loginMutation, isPending } = useMutation({
-		mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["authUser"] });
-		},
-		onError: (err) => {
-			toast.error(err.response.data.message || "Something went wrong");
-		},
+	const { mutate, isPending } = useMutation({
+		mutationFn: () => axiosInstance.post("/auth/login", values),
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+		onError: setServerError,
 	});
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		loginMutation({ username, password });
-	};
-
 	return (
-		<form onSubmit={handleSubmit} className='space-y-4 w-full max-w-md'>
-			<input
-				type='text'
-				placeholder='Username'
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-			<input
-				type='password'
-				placeholder='Password'
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-
-			<button
-				type='submit'
-				className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold flex justify-center items-center gap-2'
-				disabled={isPending}
-			>
-				{isPending ? (
-					<>
-						<Loader className='size-5 animate-spin' />
-						<span>Logging in...</span>
-					</>
-				) : (
-					"Login"
-				)}
-			</button>
+		<form
+			onSubmit={handleSubmit(
+				({ identifier, password }) => ({
+					identifier: !identifier.trim() && "Please enter your email or username",
+					password: !password && "Please enter your password",
+				}),
+				mutate
+			)}
+			noValidate
+			className='space-y-4 w-full max-w-md'
+		>
+			<FormError message={errors.form} />
+			<FormInput placeholder='Email or username' autoComplete='username' {...bind("identifier")} />
+			<FormInput type='password' placeholder='Password' autoComplete='current-password' {...bind("password")} />
+			<div className='flex justify-end'>
+				<Link to='/forgot-password' className='text-sm font-semibold text-blue-600 hover:underline'>
+					Forgot password?
+				</Link>
+			</div>
+			<SubmitButton isPending={isPending} pendingText='Logging in...'>
+				Login
+			</SubmitButton>
 		</form>
 	);
 };

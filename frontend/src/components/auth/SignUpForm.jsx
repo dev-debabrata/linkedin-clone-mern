@@ -1,85 +1,55 @@
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axiosInstance } from "../../lib/axios.js";
 import { toast } from "react-hot-toast";
-import { Loader } from "lucide-react";
+import { axiosInstance } from "../../lib/axios.js";
+import { isEmail, newPasswordRules, useForm } from "../../hooks/useForm";
+import FormInput, { FormError } from "./FormInput";
+import SubmitButton from "./SubmitButton";
 
 const SignUpForm = () => {
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-
 	const queryClient = useQueryClient();
+	const { values, errors, bind, handleSubmit, setServerError } = useForm({
+		name: "",
+		username: "",
+		email: "",
+		password: "",
+		confirmPassword: "",
+	});
 
-	const { mutate: signUpMutation, isPending } = useMutation({
-		mutationFn: async (data) => {
-			const res = await axiosInstance.post("/auth/signup", data);
-			return res.data;
+	const { mutate, isPending } = useMutation({
+		mutationFn: () => {
+			const { name, username, email, password } = values;
+			return axiosInstance.post("/auth/signup", { name, username, email, password });
 		},
 		onSuccess: () => {
 			toast.success("Account created successfully");
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
 		},
-		onError: (err) => {
-			toast.error(err.response.data.message || "Something went wrong");
-		},
+		onError: setServerError,
 	});
 
-	const handleSignUp = (e) => {
-		e.preventDefault();
-		signUpMutation({ name, username, email, password });
-	};
-
 	return (
-		<form onSubmit={handleSignUp} className='flex flex-col gap-4'>
-			<input
-				type='text'
-				placeholder='Full name'
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-			<input
-				type='text'
-				placeholder='Username'
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-			<input
-				type='email'
-				placeholder='Email'
-				value={email}
-				onChange={(e) => setEmail(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-			<input
-				type='password'
-				placeholder='Password (6+ characters)'
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full p-2 border border-blue-300 rounded-md hover:border-blue-500 focus:outline-none focus:border-red-600'
-				required
-			/>
-
-			<button
-				type='submit'
-				disabled={isPending}
-				className='btn btn-primary w-full cursor-pointer border rounded-md p-2 bg-primary text-white hover:bg-primary-dark font-semibold flex justify-center items-center gap-2'
-			>
-				{isPending ? (
-					<>
-						<Loader className='size-5 animate-spin' />
-						<span>Signing Up...</span>
-					</>
-				) : (
-					"Agree & Join"
-				)}
-			</button>
+		<form
+			onSubmit={handleSubmit(
+				({ name, username, email, password, confirmPassword }) => ({
+					name: !name.trim() && "Please enter your full name",
+					username: !username.trim() && "Please choose a username",
+					email: !isEmail(email) && "Please enter a valid email address",
+					...newPasswordRules(password, confirmPassword),
+				}),
+				mutate
+			)}
+			noValidate
+			className='flex flex-col gap-4'
+		>
+			<FormError message={errors.form} />
+			<FormInput placeholder='Full name' autoComplete='name' {...bind("name")} />
+			<FormInput placeholder='Username' autoComplete='off' {...bind("username")} />
+			<FormInput type='email' placeholder='Email' autoComplete='email' {...bind("email")} />
+			<FormInput type='password' placeholder='Password (6+ characters)' autoComplete='new-password' {...bind("password")} />
+			<FormInput type='password' placeholder='Confirm password' autoComplete='new-password' {...bind("confirmPassword")} />
+			<SubmitButton isPending={isPending} pendingText='Signing Up...'>
+				Agree & Join
+			</SubmitButton>
 		</form>
 	);
 };

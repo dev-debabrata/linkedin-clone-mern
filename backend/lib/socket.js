@@ -12,8 +12,26 @@ export const emitToUser = (userId, event, data) => io?.to(userId.toString()).emi
 const getCookie = (header = "", name) =>
 	header.split("; ").find((c) => c.startsWith(`${name}=`))?.slice(name.length + 1);
 
+const isOriginAllowed = (origin) => {
+	if (!origin) return true;
+	if (origin === process.env.CLIENT_URL) return true;
+	if (origin.endsWith(".vercel.app")) return true;
+	if (origin.includes("localhost") || origin.includes("127.0.0.1")) return true;
+	return false;
+};
+
 export const initSocket = (server) => {
-	io = new Server(server, { cors: { origin: process.env.CLIENT_URL, credentials: true } });
+	io = new Server(server, {
+		cors: {
+			origin: (origin, callback) => {
+				if (isOriginAllowed(origin)) {
+					return callback(null, true);
+				}
+				return callback(new Error("Not allowed by CORS"));
+			},
+			credentials: true,
+		},
+	});
 
 	// Same cookie auth as the REST API
 	io.use(async (socket, next) => {

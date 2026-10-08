@@ -24,9 +24,22 @@ initSocket(server);
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
+const isOriginAllowed = (origin) => {
+	if (!origin) return true;
+	if (origin === process.env.CLIENT_URL) return true;
+	if (origin.endsWith(".vercel.app")) return true;
+	if (origin.includes("localhost") || origin.includes("127.0.0.1")) return true;
+	return false;
+};
+
 app.use(
 	cors({
-		origin: process.env.CLIENT_URL,
+		origin: (origin, callback) => {
+			if (isOriginAllowed(origin)) {
+				return callback(null, true);
+			}
+			return callback(null, false);
+		},
 		credentials: true,
 	})
 );
